@@ -16,11 +16,11 @@
 * 🤖 **Intelligent Metadata Generation**: Automatically generate and enrich Croissant `.jsonld` metadata from raw dataset files using Gemini 3's advanced multimodal reasoning.
 * 🥐 **Croissant Expert Logic**: Deep integration with the MLCommons Croissant specification for 100% compliant JSON-LD serialization.
 * 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
-* 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
-* 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos to provide deep multi-modal context for datasets.
+* 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs).
+* 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos.
 * 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
-* 🧠 **NLP Entity Extraction**: Detect people, organizations, dates, and locations from any content and structure them into semantic JSON-LD.
-* 📊 **Deep Result Extraction**: Automatically scrape search results, including page titles, snippets, and intelligent keyword extraction (powered by DuckDuckGo HTML for high reliability).
+* 🧠 **NLP Entity Extraction**: Detect people, organizations, dates, AI models, currency and locations.
+* 📧 **Communication Officer**: Securely deliver generated datasets and reports to stakeholders via email.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
@@ -70,6 +70,12 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 3.  **Organization**: Automatically stores output files in `./data/croissant/`.
 4.  **Extensible Design**: Support for `FileObject`, `FileSet`, and complex `RecordSet` mappings.
 
+### 📧 Communication Officer Skill
+The `Communication Officer` skill handles the delivery of results. It:
+1.  **Secure Delivery**: Sends emails using SMTP with TLS.
+2.  **Smart Attachments**: Automatically attaches generated Croissant JSON-LD files.
+3.  **Stakeholder Engagement**: Delivers summaries and datasets directly to researchers.
+
 ## 🛠️ Tech Stack
 
 * **[Gemini 3 API](https://ai.google.dev/)**: For LLM-driven metadata generation, reasoning, and semantic search.
@@ -118,38 +124,53 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 ```bash
 # Search for datasets and extract metadata to google_search_results.json
 # Search and extract structured web data
-python skills/navigator/scripts/navigate.py "MLCommons Croissant"
+python .gemini/skills/navigator/scripts/navigate.py "MLCommons Croissant"
 ```
 
 **Using the Youtuber Skill:**
 ```bash
 # Search and extract structured video data
-python skills/youtuber/scripts/search_youtube.py "NLP data engineering"
+python .gemini/skills/youtuber/scripts/search_youtube.py "NLP data engineering"
 ```
 
 **Using the Transcriber Skill:**
 ```bash
 # Fetch transcripts for a specific video
-python skills/transcriber/scripts/transcribe.py 6cWcZ2G53gE
+python .gemini/skills/transcriber/scripts/transcribe.py 6cWcZ2G53gE
 ```
 
 **Using the Translator Skill:**
 ```bash
 # Translate a specific transcript file
-python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
+python .gemini/skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
 ```
 
 **Using the NLP Expert Skill:**
 ```bash
 # Extract named entities into JSON-LD from text or files
-python skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in Moscow."
+python .gemini/skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in Moscow."
 ```
 
 **Using the Croissant Expert Skill:**
 ```bash
 # Serialize dataset metadata with Intelligent NLP enrichment
 # (Detects creators, locations, and dates automatically)
-python skills/croissant_expert/scripts/serialize.py metadata.json --nlp
+python .gemini/skills/croissant_expert/scripts/serialize.py metadata.json --nlp
+```
+
+**Using the Wizard Skill (End-to-End):**
+```bash
+# Process a video, enrich metadata, and email the result
+export SMTP_USER="your@email.com"
+export SMTP_PASS="your-password"
+
+python3 .gemini/skills/wizard/scripts/wizard.py "https://youtube.com/link" "My Dataset" "recipient@example.com"
+```
+
+**Using the Communication Officer Skill:**
+```bash
+# Send a file manually
+python3 .gemini/skills/communication_officer/scripts/send_email.py "user@example.com" "Subject" "Body" "path/to/file.jsonld"
 ```
 
 **Metadata Generation:**
