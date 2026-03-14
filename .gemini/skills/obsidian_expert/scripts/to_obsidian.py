@@ -103,9 +103,19 @@ def main():
             f.write(md_content)
         print(f"[Obsidian Expert] Copied to vault: {vault_note_path}")
         
-    # On macOS, try to open the local file
+    # Try to open in Obsidian using URI scheme if on macOS
     if sys.platform == "darwin":
-        os.system(f"open '{output_path}'")
+        import urllib.parse
+        abs_path = os.path.abspath(output_path)
+        # If it was copied to a vault, open that one instead
+        vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
+        if vault_path and os.path.isdir(vault_path):
+            abs_path = os.path.abspath(os.path.join(vault_path, f"{safe_name}.md"))
+            
+        encoded_path = urllib.parse.quote(abs_path)
+        obsidian_uri = f"obsidian://open?path={encoded_path}"
+        print(f"[Obsidian Expert] Attempting to open in Obsidian: {obsidian_uri}")
+        os.system(f"open '{obsidian_uri}'")
 
 if __name__ == "__main__":
     main()

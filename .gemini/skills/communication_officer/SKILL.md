@@ -13,13 +13,22 @@ The Communication Officer skill automates the delivery of generated Croissant fi
 - **Flexible Configuration**: Configurable via environment variables.
 
 ## Environment Variables
-To use this skill, you must configure your SMTP settings:
+To use this skill with your Google account (**slava@codata.org**), you must set your credentials. 
+
+> [!IMPORTANT]
+> Google requires an **App Password** for SMTP. Regular passwords will not work.
+> 1. Go to your [Google Account Security](https://myaccount.google.com/security).
+> 2. Enable 2-Step Verification.
+> 3. Search for "App Passwords" and generate one for "Mail".
+
 ```bash
-export SMTP_USER="your-email@gmail.com"
-export SMTP_PASS="your-app-password"
-export SMTP_SERVER="smtp.gmail.com" # Default
-export SMTP_PORT="587"              # Default
+export SMTP_USER="slava@codata.org"
+export SMTP_PASS="your-16-character-app-password"
+export SMTP_SERVER="smtp.gmail.com"
+export SMTP_PORT="587"
 ```
+
+You can also add these to your `~/.zshrc` or `~/.bash_profile` to make them permanent.
 
 ## Usage
 ### 1. Send reaching text

@@ -10,7 +10,10 @@ def send_email(recipient, subject, body, attachment_path=None):
     smtp_pass = os.getenv("SMTP_PASS")
 
     if not smtp_user or not smtp_pass:
-        print("Error: SMTP_USER and SMTP_PASS environment variables must be set.")
+        print("\n[Communication Officer] Error: Email credentials not found.")
+        print("Please configure your environment for slava@codata.org:")
+        print("export SMTP_USER='slava@codata.org'")
+        print("export SMTP_PASS='your-google-app-password'")
         return False
 
     msg = EmailMessage()
@@ -28,7 +31,8 @@ def send_email(recipient, subject, body, attachment_path=None):
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
-            server.login(smtp_user, smtp_pass)
+            if smtp_user and smtp_pass:
+                server.login(smtp_user, smtp_pass)
             server.send_message(msg)
         print(f"Email successfully sent to {recipient}")
         return True
