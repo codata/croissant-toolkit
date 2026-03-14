@@ -68,11 +68,12 @@ CROISSANT_EXAMPLE = {
 MODEL_NAME = "gemini-3-pro-preview"
 
 
-def get_model():
+def get_model(api_key: str = None):
     """Configure and return the Gemini model."""
-    api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY environment variable not set.")
+        api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY environment variable not set and not provided in request.")
     genai.configure(api_key=api_key)
     return genai.GenerativeModel(MODEL_NAME)
 
@@ -108,6 +109,7 @@ class PageContent(BaseModel):
     images: list[dict] = []
     body_text: str = ""
     lang: str = "en"
+    api_key: str = None
 
 
 class ChatRequest(BaseModel):
@@ -115,6 +117,7 @@ class ChatRequest(BaseModel):
     message: str
     croissant: dict
     history: list[dict] = []
+    api_key: str = None
 
 
 def clean_json_response(text: str) -> str:
@@ -141,7 +144,7 @@ async def log_requests(request: Request, call_next):
 @app.post("/generate-croissant")
 async def generate_croissant(content: PageContent):
     """Generate a Croissant JSON-LD from extracted page content."""
-    model = get_model()
+    model = get_model(content.api_key)
 
     logger.info("[generate-croissant] Received | url=%s title=%s lang=%s keywords=%s",
                 content.url, content.title, content.lang, content.keywords)
@@ -233,7 +236,7 @@ Return ONLY the raw JSON-LD object, no markdown fences, no explanation."""
 @app.post("/chat")
 async def chat(request: ChatRequest):
     """Answer questions about a website based on its Croissant JSON-LD."""
-    model = get_model()
+    model = get_model(request.api_key)
 
     logger.info("[chat] Received | message=%s history_len=%d", request.message[:200], len(request.history))
 

@@ -2,6 +2,27 @@ const API_BASE = "http://localhost:8000";
 
 let currentCroissant = null;
 let chatHistory = [];
+let apiKey = "";
+
+// Load API key
+chrome.storage.local.get(["geminiApiKey"], (result) => {
+    if (result.geminiApiKey) {
+        apiKey = result.geminiApiKey;
+        document.getElementById("api-key-input").value = apiKey;
+    }
+});
+
+const saveBtn = document.getElementById("save-api-key-btn");
+if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+        const key = document.getElementById("api-key-input").value.trim();
+        chrome.storage.local.set({ geminiApiKey: key }, () => {
+            apiKey = key;
+            saveBtn.textContent = "Saved!";
+            setTimeout(() => { saveBtn.textContent = "Save"; }, 1500);
+        });
+    });
+}
 
 const generateBtn = document.getElementById("generate-btn");
 const statusEl = document.getElementById("status");
@@ -62,7 +83,7 @@ generateBtn.addEventListener("click", async () => {
             const res = await fetch(`${API_BASE}/generate-croissant`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(response),
+                body: JSON.stringify({ ...response, api_key: apiKey }),
             });
 
             if (!res.ok) {
@@ -120,6 +141,7 @@ async function sendChatMessage() {
                 message,
                 croissant: currentCroissant,
                 history: chatHistory,
+                api_key: apiKey,
             }),
         });
 
