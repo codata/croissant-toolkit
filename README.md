@@ -15,6 +15,7 @@
 * 🤖 **Intelligent Metadata Generation**: Automatically generate and enrich Croissant `.jsonld` metadata from raw dataset files using Gemini 3's advanced multimodal reasoning.
 * 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
 * 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
+* 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos to provide deep multi-modal context for datasets.
 * 📊 **Deep Result Extraction**: Automatically scrape search results, including page titles, snippets, and intelligent keyword extraction (powered by DuckDuckGo HTML for high reliability).
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
@@ -34,13 +35,20 @@ The `Youtuber` skill expands the toolkit's reach to video content. It allows the
 2.  **Structured Extraction**: Parse YouTube's internal data to get clean titles, URLs, and video descriptions.
 3.  **Multi-Modal Context**: Use video descriptions to provide richer context for dataset understanding.
 
+### 📝 Transcriber Skill
+The `Transcriber` skill converts video content into a machine-readable format. It:
+1.  **Downloads**: Fetches accurate closed-caption data from YouTube.
+2.  **Stores**: Organizes transcripts in `./data/transcripts/` for downstream processing.
+3.  **Synthesizes**: Enables Gemini 3 to "understand" video content by reasoning over the full spoken text.
+
 ## 🛠️ Tech Stack
 
 * **[Gemini 3 API](https://ai.google.dev/)**: For LLM-driven metadata generation, reasoning, and semantic search.
 * **[MLCommons Croissant](https://github.com/mlcommons/croissant)**: The standard format for ML dataset metadata.
 * **Python 3.10+**: Core backend logic and tooling.
 * **DuckDuckGo HTML Engine**: For robust, non-JS result scraping.
-* **YouTube Data Parser**: Custom scraper for YouTube's initial dataset.
+* **YouTube Data Parser**: Custom scraper for YouTube's initial metadata.
+* **YouTube Transcript API**: For secure retrieval of video caption text.
 
 ## 🚀 Getting Started
 
@@ -86,6 +94,15 @@ python skills/navigator/scripts/navigate.py "MNIST dataset croissant format"
 ```bash
 # Search for YouTube videos about Croissant and extract to youtube_search_results.json
 python skills/youtuber/scripts/youtube_search.py "MLCommons Croissant format"
+```
+
+**Using the Transcriber Skill:**
+```bash
+# Fetch and store the transcript for a specific YouTube video
+python skills/transcriber/scripts/transcribe.py "https://www.youtube.com/watch?v=6cWcZ2G53gE"
+
+# Or batch transcribe all videos from your last search
+python skills/transcriber/scripts/transcribe.py
 ```
 
 **Metadata Generation:**
