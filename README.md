@@ -12,6 +12,7 @@
 
 ## 🌟 Key Features
 
+* 🧙 **Wizard Data Integrator**: A single command to rule them all. Orchestrates transcription, translation, and NLP to generate fully-enriched Croissant metadata.
 * 🤖 **Intelligent Metadata Generation**: Automatically generate and enrich Croissant `.jsonld` metadata from raw dataset files using Gemini 3's advanced multimodal reasoning.
 * 🥐 **Croissant Expert Logic**: Deep integration with the MLCommons Croissant specification for 100% compliant JSON-LD serialization.
 * 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
@@ -43,6 +44,12 @@ The `Transcriber` skill converts video content into a machine-readable format. I
 1.  **Downloads**: Fetches accurate closed-caption data from YouTube.
 2.  **Stores**: Organizes transcripts in `./data/transcripts/` for downstream processing.
 3.  **Synthesizes**: Enables Gemini 3 to "understand" video content by reasoning over the full spoken text.
+
+### 🧙 Wizard (Data Integrator) Skill
+The `Wizard` is the master orchestrator of the toolkit. It provides a single entry point for complex data tasks:
+1.  **Automation**: Chaining transcription, translation, and NLP enrichment.
+2.  **Smart Routing**: Automatically detects video URLs vs. local files.
+3.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file in one command.
 
 ### 🌍 Translator Skill
 The `Translator` skill ensures the toolkit is truly global. It:
@@ -110,30 +117,25 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 **Using the Navigator Skill:**
 ```bash
 # Search for datasets and extract metadata to google_search_results.json
-python skills/navigator/scripts/navigate.py "MNIST dataset croissant format"
+# Search and extract structured web data
+python skills/navigator/scripts/navigate.py "MLCommons Croissant"
 ```
 
 **Using the Youtuber Skill:**
 ```bash
-# Search for YouTube videos about Croissant and extract to youtube_search_results.json
-python skills/youtuber/scripts/youtube_search.py "MLCommons Croissant format"
+# Search and extract structured video data
+python skills/youtuber/scripts/search_youtube.py "NLP data engineering"
 ```
 
 **Using the Transcriber Skill:**
 ```bash
-# Fetch and store the transcript for a specific YouTube video
-python skills/transcriber/scripts/transcribe.py "https://www.youtube.com/watch?v=6cWcZ2G53gE"
-
-# Or batch transcribe all videos from your last search
-python skills/transcriber/scripts/transcribe.py
+# Fetch transcripts for a specific video
+python skills/transcriber/scripts/transcribe.py 6cWcZ2G53gE
 ```
 
 **Using the Translator Skill:**
 ```bash
-# Translate raw text and detect language
-python skills/translator/scripts/translate.py "Bonjour, c'est un plaisir de participer au Hackathon."
-
-# Or translate a specific transcript file
+# Translate a specific transcript file
 python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
 ```
 
