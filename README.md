@@ -21,6 +21,7 @@
 * 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
 * 🧠 **Multilingual NLP**: Detect people, organizations, dates, AI models, and currency. Preserves original non-English names in metadata.
 * 📧 **Communication Officer**: Securely deliver generated datasets and reports to stakeholders via email.
+* 💎 **Obsidian Expert**: Automatically transform Croissant metadata into rich Markdown notes for personal knowledge management.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
@@ -165,9 +166,10 @@ python skills/croissant_expert/scripts/serialize.py metadata.json --nlp
 
 **Using the Wizard Skill (End-to-End):**
 ```bash
-# Process a video, enrich metadata, and email the result
+# Process a video, enrich metadata, email, and save to Obsidian
 export SMTP_USER="your@email.com"
 export SMTP_PASS="your-password"
+export OBSIDIAN_VAULT_PATH="/path/to/my/vault"
 
 python3 skills/wizard/scripts/wizard.py "https://youtube.com/link" "My Dataset" "recipient@example.com"
 ```
@@ -176,6 +178,12 @@ python3 skills/wizard/scripts/wizard.py "https://youtube.com/link" "My Dataset" 
 ```bash
 # Send a file manually
 python3 skills/communication_officer/scripts/send_email.py "user@example.com" "Subject" "Body" "path/to/file.jsonld"
+```
+
+**Using the Obsidian Expert Skill:**
+```bash
+# Convert a Croissant file to a beautiful Obsidian note
+python3 skills/obsidian_expert/scripts/to_obsidian.py "./data/croissant/dataset.jsonld"
 ```
 
 **Metadata Generation:**

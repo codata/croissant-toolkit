@@ -28,12 +28,13 @@ def run_skill(script_path, args):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python3 wizard.py <CONTENT_OR_URL> [DATASET_NAME] [RECIPIENT_EMAIL]")
+        print("Usage: python3 wizard.py <CONTENT_OR_URL> [DATASET_NAME] [RECIPIENT_EMAIL] [OBSIDIAN_VAULT_PATH]")
         sys.exit(1)
 
     input_val = sys.argv[1]
     dataset_name = sys.argv[2] if len(sys.argv) > 2 else "Wizard Generated Dataset"
     recipient_email = sys.argv[3] if len(sys.argv) > 3 else None
+    obsidian_vault = sys.argv[4] if len(sys.argv) > 4 else os.getenv("OBSIDIAN_VAULT_PATH")
     
     video_id = extract_video_id(input_val)
     content_text = ""
@@ -128,6 +129,13 @@ def main():
         body = f"Hello,\n\nThe Croissant dataset '{dataset_name}' has been successfully generated and refined with NLP metadata.\n\nPlease find the JSON-LD file attached.\n\nBest regards,\nYour Croissant Wizard"
         
         run_skill(comm_script, [recipient_email, subject, body, full_output_path])
+
+    # Step 5: Obsidian Export (Optional)
+    if obsidian_vault:
+        print(f"[Wizard] Exporting to Obsidian: {obsidian_vault}...")
+        obsidian_script = "skills/obsidian_expert/scripts/to_obsidian.py"
+        full_output_path = f"data/croissant/{output_filename}"
+        run_skill(obsidian_script, [full_output_path, obsidian_vault])
 
 if __name__ == "__main__":
     main()
