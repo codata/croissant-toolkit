@@ -10,8 +10,8 @@ def translate_text(text):
         return None
     
     genai.configure(api_key=api_key)
-    # Using gemini-1.5-flash for speed and reliability in translation
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-3-flash-preview for state-of-the-art translation
+    model = genai.GenerativeModel('gemini-3-flash-preview')
     
     prompt = f"""
     Act as a professional translator. 
