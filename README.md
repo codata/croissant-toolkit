@@ -51,7 +51,7 @@
 
 4. **Configure your environment:**
    ```bash
-   export GEMINI_API_KEY="your_api_key_here"
+   export GEMINI_API_KEY="AIzaSyBi7BVb50H7sj6oq--PzHqx43EGaM1VkKE"
    ```
 
 ### Quick Start
