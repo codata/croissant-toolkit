@@ -63,23 +63,50 @@ def get_youtube_videos(query):
                         elif 'descriptionSnippet' in vr and 'runs' in vr['descriptionSnippet']:
                             description = "".join([r['text'] for r in vr['descriptionSnippet']['runs']])
                             
+                        view_count = ""
+                        if 'viewCountText' in vr and 'simpleText' in vr['viewCountText']:
+                            view_count = vr['viewCountText']['simpleText']
+                        elif 'shortViewCountText' in vr and 'simpleText' in vr['shortViewCountText']:
+                            view_count = vr['shortViewCountText']['simpleText']
+
+                        publish_date = ""
+                        if 'publishedTimeText' in vr and 'simpleText' in vr['publishedTimeText']:
+                            publish_date = vr['publishedTimeText']['simpleText']
+                            
                         videos.append({
                             "title": title,
                             "url": f"https://www.youtube.com/watch?v={video_id}",
                             "description": description,
-                            "id": video_id
+                            "id": video_id,
+                            "views": view_count,
+                            "publish_date": publish_date
                         })
         except (KeyError, IndexError) as e:
             print(f"Error navigating YouTube JSON: {e}")
 
         # Print all found videos
         if videos:
-            print(f"Found {len(videos)} videos:\n")
-            for idx, vid in enumerate(videos[:15], start=1): # Limit to top 15
+            all_vids = list(videos)
+            print(f"Found {len(all_vids)} videos:\n")
+            for idx, vid in enumerate(all_vids, start=1):
+                if idx > 15:
+                    break
                 print(f"{idx}. {vid['title']}")
                 print(f"   URL: {vid['url']}")
+                if vid['views'] or vid['publish_date']:
+                    stats = []
+                    if vid['views']: stats.append(str(vid['views']))
+                    if vid['publish_date']: stats.append(str(vid['publish_date']))
+                    print(f"   Stats: {' • '.join(stats)}")
                 if vid['description']:
-                    print(f"   Description: {vid['description'][:150]}...")
+                    desc = str(vid['description'])
+                    if len(desc) > 150:
+                        desc_chunk = ""
+                        for i in range(150):
+                            desc_chunk += desc[i]
+                        print(f"   Description: {desc_chunk}...")
+                    else:
+                        print(f"   Description: {desc}")
                 print()
         else:
             print("No videos found.")
@@ -107,7 +134,12 @@ def main():
         print("Usage: python3 youtube_search.py <QUERY>")
         sys.exit(1)
         
-    query = " ".join(sys.argv[1:])
+    query = ""
+    for i in range(1, len(sys.argv)):
+        if query:
+            query += " "
+        query += sys.argv[i]
+    
     encoded_query = urllib.parse.quote_plus(query)
     url = f"https://www.youtube.com/results?search_query={encoded_query}"
     
