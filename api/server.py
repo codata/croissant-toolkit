@@ -46,11 +46,12 @@ CROISSANT_EXAMPLE = {
 }
 
 
-def get_model():
+def get_model(api_key: str = None):
     """Configure and return the Gemini model."""
-    api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY environment variable not set.")
+        api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY environment variable not set and not provided in request.")
     genai.configure(api_key=api_key)
     return genai.GenerativeModel("gemini-3-pro-preview")
 
@@ -66,6 +67,7 @@ class PageContent(BaseModel):
     images: list[dict] = []
     body_text: str = ""
     lang: str = "en"
+    api_key: str = None
 
 
 class ChatRequest(BaseModel):
@@ -73,6 +75,7 @@ class ChatRequest(BaseModel):
     message: str
     croissant: dict
     history: list[dict] = []
+    api_key: str = None
 
 
 def clean_json_response(text: str) -> str:
@@ -88,7 +91,7 @@ def clean_json_response(text: str) -> str:
 @app.post("/generate-croissant")
 async def generate_croissant(content: PageContent):
     """Generate a Croissant JSON-LD from extracted page content."""
-    model = get_model()
+    model = get_model(content.api_key)
 
     prompt = f"""You are a Croissant JSON-LD expert. Generate a valid Croissant JSON-LD metadata descriptor
 for the following web page content. The output must conform to the MLCommons Croissant 1.0 specification.
@@ -134,7 +137,7 @@ Return ONLY the raw JSON-LD object, no markdown fences, no explanation."""
 @app.post("/chat")
 async def chat(request: ChatRequest):
     """Answer questions about a website based on its Croissant JSON-LD."""
-    model = get_model()
+    model = get_model(request.api_key)
 
     history_text = ""
     for msg in request.history[-10:]:

@@ -3,7 +3,8 @@
     "name": "Croissant Converter",
     "version": "1.0.0",
     "description": "Convert any web page into Croissant JSON-LD metadata format",
-    "permissions": ["sidePanel", "activeTab", "scripting"],
+    "permissions": ["sidePanel", "activeTab", "scripting", "storage"],
+    "host_permissions": ["<all_urls>"],
     "side_panel": {
         "default_path": "sidepanel.html"
     },
