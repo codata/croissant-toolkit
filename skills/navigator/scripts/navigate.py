@@ -1,10 +1,11 @@
-import sys
+import argparse
 import urllib.parse
 import urllib.request
 import urllib.error
 import re
 import subprocess
 import webbrowser
+import platform
 import json
 
 def get_google_search_results(query):
@@ -110,37 +111,69 @@ def get_google_search_results(query):
         print(f"Error while parsing search results: {e}")
         return []
 
-
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python3 navigate.py <QUERY>")
-        sys.exit(1)
-        
-    query = " ".join(sys.argv[1:])
+    parser = argparse.ArgumentParser(description="Navigate to Google Search")
+    parser.add_argument('--browser', choices=['chrome', 'firefox'], default='chrome', help='Browser to use (chrome or firefox)')
+    parser.add_argument('query', nargs='+', help='The search query')
+    
+    args = parser.parse_args()
+    query = " ".join(args.query)
+
     encoded_query = urllib.parse.quote_plus(query)
     url = f"https://www.google.com/search?q={encoded_query}"
     
-    print(f"Opening Google Chrome to search for: '{query}'")
+    print(f"Opening browser to search for: '{query}'")
     
-    try:
-        # target macOS Google Chrome using the 'open' command
-        result = subprocess.run(["open", "-a", "Google Chrome", url], check=False, capture_output=True, text=True)
-        
-        if result.returncode == 0:
-            print("Successfully requested browser to open.")
+    import shutil
+    import sys
+    
+    opened = False
+    
+    # Try platform-specific commands
+    if sys.platform == "darwin":
+        # macOS
+        browser_app = "Google Chrome" if args.browser == 'chrome' else "Firefox"
+        try:
+            if shutil.which("open"):
+                subprocess.run(["open", "-a", browser_app, url], check=False)
+                opened = True
+        except Exception:
+            pass
+    elif sys.platform.startswith("linux"):
+        # Linux - try common browser commands
+        cmds = []
+        if args.browser == 'chrome':
+            cmds = ["google-chrome", "google-chrome-stable", "chromium-browser", "chromium"]
         else:
-            print(f"Failed to open Google Chrome via 'open' command. Error: {result.stderr}")
-            print("Trying default browser fallback via python webbrowser module...")
+            cmds = ["firefox"]
+        cmds.append("xdg-open")
+        
+        for cmd in cmds:
+            try:
+                if shutil.which(cmd):
+                    subprocess.run([cmd, url], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    opened = True
+                    break
+            except Exception:
+                continue
+    elif sys.platform == "win32":
+        # Windows
+        browser_cmd = "chrome" if args.browser == 'chrome' else "firefox"
+        try:
+            subprocess.run(["cmd", "/c", "start", browser_cmd, url], check=False, shell=True)
+            opened = True
+        except Exception:
+            pass
+
+    if not opened:
+        print("Trying default browser fallback via python webbrowser module...")
+        try:
             webbrowser.open(url)
-            
-    except Exception as e:
-        print(f"Error executing command: {e}")
-        print("Trying default browser fallback...")
-        webbrowser.open(url)
+        except Exception as e:
+            print(f"Failed to open browser: {e}")
 
     # Extract the web pages
     get_google_search_results(query)
-
 
 if __name__ == "__main__":
     main()

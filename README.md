@@ -13,6 +13,7 @@
 ## 🌟 Key Features
 
 * 🤖 **Intelligent Metadata Generation**: Automatically generate and enrich Croissant `.jsonld` metadata from raw dataset files using Gemini 3's advanced multimodal reasoning.
+* 🥐 **Croissant Expert Logic**: Deep integration with the MLCommons Croissant specification for 100% compliant JSON-LD serialization.
 * 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
 * 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
 * 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos to provide deep multi-modal context for datasets.
@@ -47,6 +48,13 @@ The `Translator` skill ensures the toolkit is truly global. It:
 1.  **Detection**: Automatically identifies the source language of any text or video script.
 2.  **Precision**: Translates content precisely into English using Gemini 1.5 Flash.
 3.  **Persistence**: Saves translated versions alongside originals for easy integration.
+
+### 🥐 Croissant Expert Skill
+The `Croissant Expert` skill is the brains behind the metadata formatting. It:
+1.  **Spec Compliance**: Reads and interprets the official MLCommons Croissant specification.
+2.  **Serialization**: Transforms dataset high-level metadata into standardized JSON-LD.
+3.  **Organization**: Automatically stores output files in `./data/croissant/`.
+4.  **Extensible Design**: Support for `FileObject`, `FileSet`, and complex `RecordSet` mappings.
 
 ## 🛠️ Tech Stack
 
@@ -120,6 +128,12 @@ python skills/translator/scripts/translate.py "Bonjour, c'est un plaisir de part
 
 # Or translate a specific transcript file
 python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
+```
+
+**Using the Croissant Expert Skill:**
+```bash
+# Serialize dataset metadata (output defaults to data/croissant/dataset-croissant.json)
+python skills/croissant_expert/scripts/serialize.py metadata.json
 ```
 
 **Metadata Generation:**
