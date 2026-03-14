@@ -184,6 +184,38 @@ python3 skills/communication_officer/scripts/send_email.py "user@example.com" "S
 python main.py generate ./my-local-dataset
 ```
 
+## 🌐 Chrome Extension — Croissant Converter
+
+A Chrome extension that converts any web page into Croissant JSON-LD metadata, with a contextual chat powered by Gemini 3.
+
+### Setup
+
+**1. Start the backend API:**
+
+```bash
+cd api
+pip install -r requirements.txt
+export GEMINI_API_KEY="your-api-key-here"
+python server.py
+```
+
+The API runs on `http://localhost:8000`.
+
+**2. Load the extension in Chrome:**
+
+1. Open `chrome://extensions/`
+2. Enable **Developer mode** (toggle top-right)
+3. Click **Load unpacked**
+4. Select the `extension/` folder
+
+**3. Use it:**
+
+1. Navigate to any website
+2. Click the croissant icon in the toolbar — the side panel opens
+3. Click **Generate Croissant** — extracts the page content and generates a Croissant JSON-LD
+4. Copy or download the JSON-LD
+5. Use the **Chat** section to ask questions about the page based on the generated metadata
+
 ## 🧠 The Hackathon Vision
 
 Managing ML dataset metadata is traditionally a tedious and manual process. While the Croissant format introduces a powerful and elegant standard, creating compliant metadata files from scratch remains a bottleneck for data scientists. 
