@@ -122,53 +122,55 @@ def main():
     encoded_query = urllib.parse.quote_plus(query)
     url = f"https://www.google.com/search?q={encoded_query}"
     
-    print(f"Opening {args.browser.title()} to search for: '{query}'")
+    print(f"Opening browser to search for: '{query}'")
     
-    os_name = platform.system()
+    import shutil
+    import sys
     
-    try:
-        cmd = []
+    opened = False
+    
+    # Try platform-specific commands
+    if sys.platform == "darwin":
+        # macOS
+        browser_app = "Google Chrome" if args.browser == 'chrome' else "Firefox"
+        try:
+            if shutil.which("open"):
+                subprocess.run(["open", "-a", browser_app, url], check=False)
+                opened = True
+        except Exception:
+            pass
+    elif sys.platform.startswith("linux"):
+        # Linux - try common browser commands
+        cmds = []
         if args.browser == 'chrome':
-            if os_name == 'Darwin':
-                cmd = ["open", "-a", "Google Chrome", url]
-            elif os_name == 'Windows':
-                cmd = ["cmd", "/c", "start", "chrome", url]
-            else: # Linux
-                cmd = ["google-chrome", url]
-        elif args.browser == 'firefox':
-            if os_name == 'Darwin':
-                cmd = ["open", "-a", "Firefox", url]
-            elif os_name == 'Windows':
-                cmd = ["cmd", "/c", "start", "firefox", url]
-            else: # Linux
-                cmd = ["firefox", url]
+            cmds = ["google-chrome", "google-chrome-stable", "chromium-browser", "chromium"]
+        else:
+            cmds = ["firefox"]
+        cmds.append("xdg-open")
+        
+        for cmd in cmds:
+            try:
+                if shutil.which(cmd):
+                    subprocess.run([cmd, url], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    opened = True
+                    break
+            except Exception:
+                continue
+    elif sys.platform == "win32":
+        # Windows
+        browser_cmd = "chrome" if args.browser == 'chrome' else "firefox"
+        try:
+            subprocess.run(["cmd", "/c", "start", browser_cmd, url], check=False, shell=True)
+            opened = True
+        except Exception:
+            pass
 
-        # On Windows, we need to pass shell=True for 'cmd /c start' to work properly
-        if os_name == 'Windows':
-            result = subprocess.run(cmd, check=False, shell=True, capture_output=True, text=True)
-        else:
-            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
-            
-        if result.returncode == 0:
-            print("Successfully requested browser to open.")
-        else:
-            print(f"Failed to open browser. Error: {result.stderr}")
-            print("Trying default browser fallback via python webbrowser module...")
-            if args.browser == 'firefox':
-                try:
-                    webbrowser.get('firefox').open(url)
-                except:
-                    webbrowser.open(url)
-            else:
-                try:
-                    webbrowser.get('chrome').open(url)
-                except:
-                    webbrowser.open(url)
-            
-    except Exception as e:
-        print(f"Error executing command: {e}")
-        print("Trying default browser fallback...")
-        webbrowser.open(url)
+    if not opened:
+        print("Trying default browser fallback via python webbrowser module...")
+        try:
+            webbrowser.open(url)
+        except Exception as e:
+            print(f"Failed to open browser: {e}")
 
     # Extract the web pages
     get_google_search_results(query)
