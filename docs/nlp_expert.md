@@ -6,14 +6,16 @@ Extract named entities (persons, organizations, dates, locations) from text and 
 
 ## Usage
 
+To use this skill, simply ask the AI agent:
+
 Process raw text:
-```bash
-python3 nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in Moscow in 1971."
+```text
+Use the NLP Expert skill to extract entities from "Sergei Bodrov was born in Moscow in 1971."
 ```
 
 Process a file (e.g., a transcript):
-```bash
-python3 nlp_expert/scripts/extract_entities.py data/transcripts/6cWcZ2G53gE.txt
+```text
+Use the NLP Expert skill to extract entities from data/transcripts/6cWcZ2G53gE.txt
 ```
 
 ## Example Output (JSON-LD)

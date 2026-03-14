@@ -6,17 +6,20 @@ Recognize the language of input content or video scripts and translate them prec
 
 ## Usage
 
+To use this skill, simply ask the AI agent:
+
 Translate raw text:
-```bash
-python3 translator/scripts/translate.py "Hola, ¿cómo estás? me gustaría aprender sobre Croissant."
+```text
+Use the Translator skill to translate "Hola, ¿cómo estás? me gustaría aprender sobre Croissant."
 ```
 
 Translate a local file (e.g., a non-English transcript):
-```bash
-python3 translator/scripts/translate.py data/transcripts/NON_ENGLISH_VIDEO_ID.txt
+```text
+Use the Translator skill to translate the data/transcripts/NON_ENGLISH_VIDEO_ID.txt
 ```
 
 ## Example
-```bash
-python3 translator/scripts/translate.py Bonjour, c'est un plaisir de participer au Hackathon.
+
+```text
+Use the Translator skill to translate "Bonjour, c'est un plaisir de participer au Hackathon."
 ```

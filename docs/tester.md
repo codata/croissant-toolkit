@@ -5,6 +5,8 @@ Test the navigator skill by verifying that it returns at least 10 relevant searc
 **Core functionality:** Executes the navigator script with the "gemini" query and validates the resulting `google_search_results.json`.
 
 ## Usage
-```bash
-python3 skills/tester/scripts/test_navigator.py
+
+To use this skill, simply ask the AI agent:
+```text
+Use the Tester skill to test the Navigator skill.
 ```

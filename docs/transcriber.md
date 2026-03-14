@@ -6,17 +6,20 @@ Fetch and store transcripts from YouTube videos for deep content analysis.
 
 ## Usage
 
+To use this skill, simply ask the AI agent:
+
 Transcribe a specific video:
-```bash
-python3 transcriber/scripts/transcribe.py <VIDEO_URL_OR_ID>
+```text
+Use the Transcriber skill to transcribe the video at <VIDEO_URL_OR_ID>.
 ```
 
 Batch transcribe the results from the last Youtuber search:
-```bash
-python3 transcriber/scripts/transcribe.py
+```text
+Use the Transcriber skill to batch transcribe the results from the last YouTube search.
 ```
 
 ## Example
-```bash
-python3 transcriber/scripts/transcribe.py https://www.youtube.com/watch?v=6cWcZ2G53gE
+
+```text
+Use the Transcriber skill to transcribe the video at https://www.youtube.com/watch?v=6cWcZ2G53gE
 ```

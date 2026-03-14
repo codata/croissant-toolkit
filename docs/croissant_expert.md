@@ -5,8 +5,10 @@ Specialized in the MLCommons Croissant metadata specification. Can generate, val
 **Core functionality:** Transforms a structured metadata JSON into the final Croissant format. Output files are designed to pass the official Croissant validator and are stored locally in `./data/croissant/` as JSON-LD files.
 
 ## Usage
-```bash
-python3 croissant_expert/scripts/serialize.py <INPUT_METADATA_JSON> [OUTPUT_JSON_LD]
+
+To use this skill, simply ask the AI agent:
+```text
+Use the Croissant Expert skill to generate Croissant metadata from <INPUT_METADATA_JSON>.
 ```
 
 ## Metadata Schema
