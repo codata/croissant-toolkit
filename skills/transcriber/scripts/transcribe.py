@@ -24,12 +24,12 @@ def transcribe_video(video_id, output_dir):
         # Fetch the transcript list
         transcript_list_obj = api.list(video_id)
         
-        # Try to find a manually created or generated transcript in English
+        # Try to find a manually created or generated transcript in English or Russian
         try:
-            transcript_data = transcript_list_obj.find_transcript(['en', 'en-US']).fetch()
+            transcript_data = transcript_list_obj.find_transcript(['en', 'en-US', 'ru']).fetch()
         except:
-            # Fallback to any available transcript if English is not found exactly
-            transcript_data = transcript_list_obj.find_generated_transcript(['en']).fetch()
+            # Fallback to any available transcript if preferred languages are not found exactly
+            transcript_data = transcript_list_obj.find_generated_transcript(['en', 'ru']).fetch()
 
         # Combine the text
         full_text = " ".join([item.text for item in transcript_data])

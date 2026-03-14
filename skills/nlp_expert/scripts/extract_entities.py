@@ -19,9 +19,18 @@ def extract_entities(text):
     - Organizations (Companies, Institutions)
     - Locations (Cities, Countries, Landmarks)
     - Dates (Specific days, months, years)
+    - AI Models (Large Language Models, Machine Learning architectures)
+    - Currency (Money amounts, financial units)
+    - Numerical Measurements (Sizes, counts, statistics, percentages)
 
-    Return the result ONLY as a valid JSON-LD object using Schema.org types (e.g., Person, Organization, Place, Event/Date).
-    The structure should be a Dataset or an ItemList containing these entities.
+    Return the result ONLY as a valid JSON-LD object using Schema.org types (e.g., Person, Organization, Place, Event, MonetaryAmount, Quantity, CreativeWork).
+    The structure should be a ItemList containing these entities.
+    
+    IMPORTANT: For each entity, if the source text is NOT in English, return:
+    - "name": The English translation
+    - "name_original": The exact text from the source content
+    - "language": The ISO language code (e.g., "ru", "uk", "fr")
+    If it's already in English, just return "name".
 
     TEXT:
     {text}
