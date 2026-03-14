@@ -16,6 +16,7 @@
 * 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
 * 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
 * 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos to provide deep multi-modal context for datasets.
+* 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
 * 📊 **Deep Result Extraction**: Automatically scrape search results, including page titles, snippets, and intelligent keyword extraction (powered by DuckDuckGo HTML for high reliability).
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
@@ -41,6 +42,12 @@ The `Transcriber` skill converts video content into a machine-readable format. I
 2.  **Stores**: Organizes transcripts in `./data/transcripts/` for downstream processing.
 3.  **Synthesizes**: Enables Gemini 3 to "understand" video content by reasoning over the full spoken text.
 
+### 🌍 Translator Skill
+The `Translator` skill ensures the toolkit is truly global. It:
+1.  **Detection**: Automatically identifies the source language of any text or video script.
+2.  **Precision**: Translates content precisely into English using Gemini 1.5 Flash.
+3.  **Persistence**: Saves translated versions alongside originals for easy integration.
+
 ## 🛠️ Tech Stack
 
 * **[Gemini 3 API](https://ai.google.dev/)**: For LLM-driven metadata generation, reasoning, and semantic search.
@@ -49,6 +56,7 @@ The `Transcriber` skill converts video content into a machine-readable format. I
 * **DuckDuckGo HTML Engine**: For robust, non-JS result scraping.
 * **YouTube Data Parser**: Custom scraper for YouTube's initial metadata.
 * **YouTube Transcript API**: For secure retrieval of video caption text.
+* **AI Translation**: High-precision multi-lingual support via Gemini 3.
 
 ## 🚀 Getting Started
 
@@ -103,6 +111,15 @@ python skills/transcriber/scripts/transcribe.py "https://www.youtube.com/watch?v
 
 # Or batch transcribe all videos from your last search
 python skills/transcriber/scripts/transcribe.py
+```
+
+**Using the Translator Skill:**
+```bash
+# Translate raw text and detect language
+python skills/translator/scripts/translate.py "Bonjour, c'est un plaisir de participer au Hackathon."
+
+# Or translate a specific transcript file
+python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
 ```
 
 **Metadata Generation:**
