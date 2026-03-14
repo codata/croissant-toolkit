@@ -22,3 +22,6 @@ Thumbs.db
 
 # Gemini internal folder (if any)
 .gemini/
+
+# data folder
+data/

@@ -120,23 +120,38 @@ def main():
     encoded_query = urllib.parse.quote_plus(query)
     url = f"https://www.google.com/search?q={encoded_query}"
     
-    print(f"Opening Google Chrome to search for: '{query}'")
+    print(f"Opening browser to search for: '{query}'")
     
-    try:
-        # target macOS Google Chrome using the 'open' command
-        result = subprocess.run(["open", "-a", "Google Chrome", url], check=False, capture_output=True, text=True)
-        
-        if result.returncode == 0:
-            print("Successfully requested browser to open.")
-        else:
-            print(f"Failed to open Google Chrome via 'open' command. Error: {result.stderr}")
-            print("Trying default browser fallback via python webbrowser module...")
+    import shutil
+    
+    opened = False
+    
+    # Try platform-specific commands
+    if sys.platform == "darwin":
+        # macOS
+        try:
+            if shutil.which("open"):
+                subprocess.run(["open", "-a", "Google Chrome", url], check=False)
+                opened = True
+        except Exception:
+            pass
+    elif sys.platform.startswith("linux"):
+        # Linux - try common browser commands
+        for cmd in ["google-chrome", "google-chrome-stable", "chromium-browser", "chromium", "xdg-open"]:
+            try:
+                if shutil.which(cmd):
+                    subprocess.run([cmd, url], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    opened = True
+                    break
+            except Exception:
+                continue
+
+    if not opened:
+        print("Trying default browser fallback via python webbrowser module...")
+        try:
             webbrowser.open(url)
-            
-    except Exception as e:
-        print(f"Error executing command: {e}")
-        print("Trying default browser fallback...")
-        webbrowser.open(url)
+        except Exception as e:
+            print(f"Failed to open browser: {e}")
 
     # Extract the web pages
     get_google_search_results(query)
