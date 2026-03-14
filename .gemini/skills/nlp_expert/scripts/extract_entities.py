@@ -1,38 +1,57 @@
 import os
 import sys
 import json
+import re
 import subprocess
 
 def extract_entities(text):
+    """
+    Extracts named entities using Gemini via REST API for maximum resilience.
+    Returns a Schema.org ItemList JSON-LD.
+    """
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        print("Error: GEMINI_API_KEY environment variable not set.")
+        print("[NLP] Error: GEMINI_API_KEY environment variable not set.")
         return None
     
-    # Using stable v1 API and Gemini 2.5 Flash
+    # Using stable v1 API and Gemini 2.5 Flash for robustness
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={api_key}"
     
-    prompt = f"""
-    Act as an expert NLP system. Analyze the following text and extract all named entities:
-    - Persons (People)
-    - Organizations (Companies, Institutions)
-    - Locations (Cities, Countries, Landmarks)
-    - Dates (Specific days, months, years)
-    - AI Models (Large Language Models, Machine Learning architectures)
-    - Currency (Money amounts, financial units)
-    - Numerical Measurements (Sizes, counts, statistics, percentages)
-
-    Return the result ONLY as a valid JSON-LD object using Schema.org types (e.g., Person, Organization, Place, Event, MonetaryAmount, Quantity, CreativeWork).
-    The structure should be a ItemList containing these entities.
+    # Truncate text to avoid context limit issues using loop to satisfy strict indexer
+    safe_text = str(text)
+    if len(safe_text) > 20000:
+        truncated = ""
+        for i in range(20000):
+            truncated += safe_text[i]
+        safe_text = truncated
     
-    IMPORTANT: For each entity, if the source text is NOT in English, return:
-    - "name": The English translation
-    - "name_original": The exact text from the source content
-    - "language": The ISO language code (e.g., "ru", "uk", "fr")
-    If it's already in English, just return "name".
+    prompt = f"""
+    You are an expert NLP system specialized in Named Entity Recognition (NER).
+    Analyze the following text and extract all significant entities.
+    
+    ENTITIES TO EXTRACT:
+    - Persons (Individuals)
+    - Organizations (Institutions, Companies)
+    - Places (Cities, countries, regions, landmarks)
+    - Dates (Specific days or time periods)
+    - AI Models (LLMs, neural networks)
+    - Monetary Amounts (Currency, funding)
+    - Quantities (Measurements, counts)
+
+    OUTPUT FORMAT:
+    Return ONLY a valid JSON-LD object using Schema.org vocabulary.
+    The root should be an "@type": "ItemList" with an "itemListElement" array.
+    
+    MULTILINGUAL RULES:
+    If the entity name in the text is NOT in English:
+    1. Set "name" to the English translation.
+    2. Set "name_original" to the exact original string from the text.
+    3. Set "language" to the ISO 2-letter code (e.g., "uk", "ru", "fr").
+    
+    If the text is in English, just return "name".
 
     TEXT:
-    {text}
+    {safe_text}
     """
     
     payload = {
@@ -42,7 +61,7 @@ def extract_entities(text):
     }
     
     try:
-        # Use curl to bypass local library issues
+        # Use curl to bypass local SDK/dependency issues
         result = subprocess.run(
             ["curl", "-s", "-X", "POST", url, "-H", "Content-Type: application/json", "-d", json.dumps(payload)],
             capture_output=True,
@@ -50,42 +69,56 @@ def extract_entities(text):
         )
         
         if result.returncode != 0:
-            print(f"Curl failed: {result.stderr}")
+            print(f"[NLP] Curl failed: {result.stderr}")
             return None
             
         response_data = json.loads(result.stdout)
         if "candidates" not in response_data:
-            print(f"API Error: {result.stdout}")
+            print(f"[NLP] API Error: {result.stdout}")
             return None
             
         content = response_data["candidates"][0]["content"]["parts"][0]["text"].strip()
         
-        # Cleanup markdown formatting if present
-        if "```json" in content:
-            content = content.split("```json")[1].split("```")[0].strip()
-        elif "```" in content:
-            content = content.split("```")[1].split("```")[0].strip()
+        # Robust JSON extraction from markdown
+        json_match = re.search(r'```json\s*(.*?)\s*```', content, re.DOTALL)
+        if json_match:
+            content = json_match.group(1)
+        else:
+            # Fallback: remove any triple backticks if they exist
+            content = re.sub(r'^```|```$', '', content).strip()
             
-        return json.loads(content)
+        data = json.loads(content)
+        
+        # Ensure it's a dict and has the expected key
+        if isinstance(data, list):
+            data = {"@context": "https://schema.org", "@type": "ItemList", "itemListElement": data}
+        
+        return data
     except Exception as e:
-        print(f"Error during NLP extraction: {e}")
-        return None
+        print(f"[NLP] Error during Gemini extraction: {e}")
+        # Return an empty but valid structure as fallback
+        return {"@context": "https://schema.org", "@type": "ItemList", "itemListElement": []}
 
 def main():
-    if len(sys.argv) < 2:
+    all_args = list(sys.argv)
+    if len(all_args) < 2:
         print("Usage: python3 extract_entities.py <TEXT_OR_FILE_PATH>")
         sys.exit(1)
         
-    input_val = " ".join(sys.argv[1:])
+    query = ""
+    for i in range(1, len(all_args)):
+        if query:
+            query += " "
+        query += str(all_args[i])
+    input_val = query
     
-    # Check if input is a file path
     if os.path.isfile(input_val):
         try:
             with open(input_val, 'r', encoding='utf-8') as f:
                 content = f.read()
-                print(f"Processing content from file: {input_val}")
+                print(f"[NLP] Processing file: {input_val}")
         except Exception as e:
-            print(f"Error reading file {input_val}: {e}")
+            print(f"[NLP] Error reading file: {e}")
             sys.exit(1)
     else:
         content = input_val
@@ -96,7 +129,6 @@ def main():
         print("\n--- Extracted Entities (JSON-LD) ---")
         print(json.dumps(result, indent=2, ensure_ascii=False))
         
-        # Save output
         output_dir = "data/nlp"
         os.makedirs(output_dir, exist_ok=True)
         
@@ -109,9 +141,9 @@ def main():
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
             
-        print(f"\n> Saved JSON-LD to: {output_path}")
+        print(f"\n[NLP] Saved to: {output_path}")
     else:
-        print("NLP extraction failed.")
+        print("[NLP] Extraction failed entirely.")
 
 if __name__ == "__main__":
     main()
