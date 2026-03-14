@@ -18,6 +18,7 @@
 * 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
 * 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos to provide deep multi-modal context for datasets.
 * 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
+* 🧠 **NLP Entity Extraction**: Detect people, organizations, dates, and locations from any content and structure them into semantic JSON-LD.
 * 📊 **Deep Result Extraction**: Automatically scrape search results, including page titles, snippets, and intelligent keyword extraction (powered by DuckDuckGo HTML for high reliability).
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
@@ -49,6 +50,12 @@ The `Translator` skill ensures the toolkit is truly global. It:
 2.  **Precision**: Translates content precisely into English using Gemini 1.5 Flash.
 3.  **Persistence**: Saves translated versions alongside originals for easy integration.
 
+### 🧠 NLP Expert Skill
+The `NLP Expert` skill extracts structured knowledge. It:
+1.  **Recognition**: Identifies persons, organizations, locations, and dates.
+2.  **Semantic Mapping**: Converts detected entities into Schema.org JSON-LD.
+3.  **Contextual Enrichment**: Provides deeper understanding of dataset provenance and coverage.
+
 ### 🥐 Croissant Expert Skill
 The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 1.  **Spec Compliance**: Reads and interprets the official MLCommons Croissant specification.
@@ -64,7 +71,7 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 * **DuckDuckGo HTML Engine**: For robust, non-JS result scraping.
 * **YouTube Data Parser**: Custom scraper for YouTube's initial metadata.
 * **YouTube Transcript API**: For secure retrieval of video caption text.
-* **AI Translation**: High-precision multi-lingual support via Gemini 3.
+* **AI Translation & NLP**: High-precision multi-lingual support and entity extraction via Gemini 3.
 
 ## 🚀 Getting Started
 
@@ -128,6 +135,12 @@ python skills/translator/scripts/translate.py "Bonjour, c'est un plaisir de part
 
 # Or translate a specific transcript file
 python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
+```
+
+**Using the NLP Expert Skill:**
+```bash
+# Extract named entities into JSON-LD from text or files
+python skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in Moscow."
 ```
 
 **Using the Croissant Expert Skill:**
