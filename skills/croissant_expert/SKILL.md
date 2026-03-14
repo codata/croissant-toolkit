@@ -16,7 +16,12 @@ Transforms a structured metadata JSON into the final Croissant format.
 
 **Usage:**
 ```bash
+# Standard serialization
 python3 croissant_expert/scripts/serialize.py <INPUT_METADATA_JSON> [OUTPUT_JSON_LD]
+
+# Serialization with Intelligent NLP enrichment
+# Automatically detects creators, locations, and dates from the description.
+python3 croissant_expert/scripts/serialize.py <INPUT_METADATA_JSON> --nlp
 ```
 
 **Metadata Schema:**

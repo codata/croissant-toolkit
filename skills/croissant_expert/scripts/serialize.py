@@ -2,6 +2,13 @@ import json
 import sys
 import os
 
+# Import NLP Expert logic if available
+try:
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../nlp_expert/scripts'))
+    from extract_entities import extract_entities
+except ImportError:
+    extract_entities = None
+
 def create_croissant_jsonld(metadata):
     """
     Creates a valid Croissant JSON-LD structure based on provided metadata.
@@ -24,6 +31,22 @@ def create_croissant_jsonld(metadata):
     distribution_list = []
     record_set_list = []
 
+    creator_list = metadata.get("creator", [])
+    if not isinstance(creator_list, list):
+        creator_list = [creator_list]
+        
+    publisher_list = metadata.get("publisher", [])
+    if not isinstance(publisher_list, list):
+        publisher_list = [publisher_list]
+        
+    spatial_list = metadata.get("spatialCoverage", [])
+    if not isinstance(spatial_list, list):
+        spatial_list = [spatial_list]
+        
+    temporal_list = metadata.get("temporalCoverage", [])
+    if not isinstance(temporal_list, list):
+        temporal_list = [temporal_list]
+
     dataset = {
         "@context": context,
         "@type": "sc:Dataset",
@@ -33,8 +56,43 @@ def create_croissant_jsonld(metadata):
         "license": metadata.get("license", "CC-BY-4.0"),
         "dct:conformsTo": "http://mlcommons.org/croissant/1.0",
         "distribution": distribution_list,
-        "recordSet": record_set_list
+        "recordSet": record_set_list,
+        "creator": creator_list,
+        "publisher": publisher_list,
+        "spatialCoverage": spatial_list,
+        "temporalCoverage": temporal_list
     }
+
+    # Enrich with NLP if requested
+    if metadata.get("apply_nlp") and extract_entities:
+        print(f"> Applying NLP analysis for: {dataset['name']}")
+        entities = extract_entities(f"{dataset['name']} {dataset['description']}")
+        if entities:
+            # Map Schema.org entities to Dataset fields
+            elements = entities.get("itemListElement", [])
+            for el in elements:
+                # Handle cases where el is a ListItem or direct entity
+                item = el.get("item") if isinstance(el.get("item"), dict) else el
+                etype = item.get("@type")
+                ename = item.get("name")
+                
+                if etype in ["Person", "Organization", "CollegeOrUniversity", "EducationalOrganization"]:
+                    role_type = "sc:Person" if etype == "Person" else "sc:Organization"
+                    if ename not in [c.get("name") if isinstance(c, dict) else c for c in creator_list]:
+                        creator_list.append({"@type": role_type, "name": ename})
+                elif etype in ["Place", "City", "Country"]:
+                    if ename not in spatial_list:
+                        spatial_list.append(ename)
+                elif etype in ["Event", "Date", "Duration"]:
+                    date_val = item.get("startDate") or item.get("name")
+                    if date_val not in temporal_list:
+                        temporal_list.append(date_val)
+
+    # Clean up empty optional fields
+    if not creator_list: dataset.pop("creator", None)
+    if not publisher_list: dataset.pop("publisher", None)
+    if not spatial_list: dataset.pop("spatialCoverage", None)
+    if not temporal_list: dataset.pop("temporalCoverage", None)
 
     # Handle distribution
     for dist in metadata.get("distribution", []):
@@ -126,8 +184,13 @@ def main():
     output_dir = "data/croissant"
     os.makedirs(output_dir, exist_ok=True)
     
-    if len(sys.argv) > 2:
-        output_file = sys.argv[2]
+    apply_nlp = "--nlp" in sys.argv
+    
+    # Filter out flags from potential output_file argument
+    args = [a for a in sys.argv[2:] if not a.startswith("--")]
+    
+    if args:
+        output_file = args[0]
         # If user provides a filename without a path, put it in the default dir
         if not os.path.dirname(output_file):
             output_file = os.path.join(output_dir, output_file)
@@ -138,6 +201,9 @@ def main():
         with open(input_file, 'r') as f:
             metadata = json.load(f)
         
+        if apply_nlp:
+            metadata["apply_nlp"] = True
+            
         croissant_data = create_croissant_jsonld(metadata)
         
         with open(output_file, 'w') as f:
