@@ -47,11 +47,25 @@ def create_croissant_jsonld(metadata):
     if not isinstance(temporal_list, list):
         temporal_list = [temporal_list]
 
+    keywords_list = metadata.get("keywords", [])
+    if not isinstance(keywords_list, list):
+        keywords_list = [keywords_list]
+
+    # Multi-lingual support helper
+    def format_multilingual(value, default_lang="en"):
+        if isinstance(value, dict) and "@value" in value:
+            return value
+        if isinstance(value, str):
+            # If value is a string, wrap it as an object with the language tag
+            # If default_lang is provided, we use it.
+            return { "@language": default_lang, "@value": value }
+        return value
+
     dataset = {
         "@context": context,
         "@type": "sc:Dataset",
-        "name": metadata.get("name", "Untitled Dataset"),
-        "description": metadata.get("description", "No description provided."),
+        "name": format_multilingual(metadata.get("name", "Untitled Dataset")),
+        "description": format_multilingual(metadata.get("description", "No description provided.")),
         "url": metadata.get("url", "https://example.com/dataset"),
         "license": metadata.get("license", "CC-BY-4.0"),
         "dct:conformsTo": "http://mlcommons.org/croissant/1.0",
@@ -60,13 +74,16 @@ def create_croissant_jsonld(metadata):
         "creator": creator_list,
         "publisher": publisher_list,
         "spatialCoverage": spatial_list,
-        "temporalCoverage": temporal_list
+        "temporalCoverage": temporal_list,
+        "keywords": keywords_list
     }
 
     # Enrich with NLP if requested
     if metadata.get("apply_nlp") and extract_entities:
         print(f"> Applying NLP analysis for: {dataset['name']}")
-        entities = extract_entities(f"{dataset['name']} {dataset['description']}")
+        # Use provided nlp_text or fall back to name + description
+        text_to_analyze = metadata.get("nlp_text") or f"{dataset['name']} {dataset['description']}"
+        entities = extract_entities(text_to_analyze)
         if entities:
             # Map Schema.org entities to Dataset fields
             elements = entities.get("itemListElement", [])
@@ -75,24 +92,44 @@ def create_croissant_jsonld(metadata):
                 item = el.get("item") if isinstance(el.get("item"), dict) else el
                 etype = item.get("@type")
                 ename = item.get("name")
+                ename_orig = item.get("name_original")
+                elang = item.get("language")
                 
+                # Multilingual name handling
+                m_name = format_multilingual(ename, "en")
+                if ename_orig and elang:
+                    m_name = [m_name, format_multilingual(ename_orig, elang)]
+
                 if etype in ["Person", "Organization", "CollegeOrUniversity", "EducationalOrganization"]:
                     role_type = "sc:Person" if etype == "Person" else "sc:Organization"
                     if ename not in [c.get("name") if isinstance(c, dict) else c for c in creator_list]:
-                        creator_list.append({"@type": role_type, "name": ename})
+                        creator_list.append({"@type": role_type, "name": m_name})
                 elif etype in ["Place", "City", "Country"]:
                     if ename not in spatial_list:
-                        spatial_list.append(ename)
+                        spatial_list.append(m_name)
                 elif etype in ["Event", "Date", "Duration"]:
                     date_val = item.get("startDate") or item.get("name")
                     if date_val not in temporal_list:
-                        temporal_list.append(date_val)
+                        temporal_list.append(format_multilingual(date_val, "en"))
+                elif etype in ["MonetaryAmount", "Quantity", "CreativeWork", "SoftwareApplication"]:
+                    # These are useful extras to include as keywords
+                    pass
+                
+                # Also add as keywords for better searchability
+                if m_name:
+                    if isinstance(m_name, list):
+                        for mn in m_name:
+                            if mn not in keywords_list:
+                                keywords_list.append(mn)
+                    elif m_name not in keywords_list:
+                        keywords_list.append(m_name)
 
     # Clean up empty optional fields
     if not creator_list: dataset.pop("creator", None)
     if not publisher_list: dataset.pop("publisher", None)
     if not spatial_list: dataset.pop("spatialCoverage", None)
     if not temporal_list: dataset.pop("temporalCoverage", None)
+    if not keywords_list: dataset.pop("keywords", None)
 
     # Handle distribution
     for dist in metadata.get("distribution", []):

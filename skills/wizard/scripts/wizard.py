@@ -77,15 +77,18 @@ def main():
     # Step 3: Croissant Generation (which now handles NLP internally)
     print(f"[Wizard] Generating Croissant metadata for: {dataset_name}")
     
-    final_desc = str(content_text)
-    if len(final_desc) > 1000:
-        final_desc = final_desc[:1000] + "..."
+    content_str = str(content_text)
+    if len(content_str) > 1000:
+        final_desc = content_str[:1000] + "..."
+    else:
+        final_desc = content_str
 
     # Create a temporary metadata file for the Croissant Expert
     temp_metadata = {
         "name": str(dataset_name),
         "description": final_desc,
         "url": str(input_val) if video_id else "https://example.com/dataset",
+        "nlp_text": str(content_text), # Pass full text for deep NLP analysis
         "distribution": []
     }
     
