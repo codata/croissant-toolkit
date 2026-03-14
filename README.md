@@ -13,15 +13,34 @@
 ## 🌟 Key Features
 
 * 🤖 **Intelligent Metadata Generation**: Automatically generate and enrich Croissant `.jsonld` metadata from raw dataset files using Gemini 3's advanced multimodal reasoning.
+* 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
+* 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
+* 📊 **Deep Result Extraction**: Automatically scrape search results, including page titles, snippets, and intelligent keyword extraction (powered by DuckDuckGo HTML for high reliability).
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
+
+## 🧩 Skills & Tools
+
+### 🧭 Navigator Skill
+The `Navigator` skill acts as an intelligent bridge between the toolkit and the web. It allows the agent to:
+1.  **Search**: Execute high-intent searches on Google.
+2.  **Browse**: Open the specific search results in Google Chrome for the user.
+3.  **Analyze**: Extract and structure metadata (titles, snippets, keywords) from the web to feed into the Croissant reasoning engine.
+
+### 📺 Youtuber Skill
+The `Youtuber` skill expands the toolkit's reach to video content. It allows the agent to:
+1.  **Discovery**: Find relevant video tutorials, explanations, and demonstrations on YouTube.
+2.  **Structured Extraction**: Parse YouTube's internal data to get clean titles, URLs, and video descriptions.
+3.  **Multi-Modal Context**: Use video descriptions to provide richer context for dataset understanding.
 
 ## 🛠️ Tech Stack
 
 * **[Gemini 3 API](https://ai.google.dev/)**: For LLM-driven metadata generation, reasoning, and semantic search.
 * **[MLCommons Croissant](https://github.com/mlcommons/croissant)**: The standard format for ML dataset metadata.
 * **Python 3.10+**: Core backend logic and tooling.
+* **DuckDuckGo HTML Engine**: For robust, non-JS result scraping.
+* **YouTube Data Parser**: Custom scraper for YouTube's initial dataset.
 
 ## 🚀 Getting Started
 
@@ -29,6 +48,7 @@
 
 * Python 3.10 or higher
 * A Gemini API Key from [Google AI Studio](https://aistudio.google.com/)
+* Google Chrome installed (for `Navigator` and `Youtuber` skills)
 
 ### Installation
 
@@ -55,7 +75,20 @@
    ```
 
 ### Quick Start
-*(Placeholder for CLI/Usage instructions once implemented)*
+
+**Using the Navigator Skill:**
+```bash
+# Search for datasets and extract metadata to google_search_results.json
+python skills/navigator/scripts/navigate.py "MNIST dataset croissant format"
+```
+
+**Using the Youtuber Skill:**
+```bash
+# Search for YouTube videos about Croissant and extract to youtube_search_results.json
+python skills/youtuber/scripts/youtube_search.py "MLCommons Croissant format"
+```
+
+**Metadata Generation:**
 ```bash
 # Example: Generate a Croissant metadata file from a raw dataset directory
 python main.py generate ./my-local-dataset
