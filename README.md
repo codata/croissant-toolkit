@@ -19,7 +19,7 @@
 * 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs).
 * 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos.
 * 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
-* 🧠 **NLP Entity Extraction**: Detect people, organizations, dates, AI models, currency and locations.
+* 🧠 **Multilingual NLP**: Detect people, organizations, dates, AI models, and currency. Preserves original non-English names in metadata.
 * 📧 **Communication Officer**: Securely deliver generated datasets and reports to stakeholders via email.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
@@ -48,8 +48,8 @@ The `Transcriber` skill converts video content into a machine-readable format. I
 ### 🧙 Wizard (Data Integrator) Skill
 The `Wizard` is the master orchestrator of the toolkit. It provides a single entry point for complex data tasks:
 1.  **Automation**: Chaining transcription, translation, and NLP enrichment.
-2.  **Smart Routing**: Automatically detects video URLs vs. local files.
-3.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file in one command.
+2.  **Multilingual Support**: Captures entities in both English and their original language (e.g., Ukrainian, Russian, French) using JSON-LD tags.
+3.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file, with optional email delivery to stakeholders.
 
 ### 🌍 Translator Skill
 The `Translator` skill ensures the toolkit is truly global. It:
@@ -113,9 +113,14 @@ The `Communication Officer` skill handles the delivery of results. It:
    pip install -r requirements.txt
    ```
 
-4. **Configure your environment:**
+4. **Configure your environment**:
    ```bash
-   export GEMINI_API_KEY="your-api-key-here"  # Example: AIzaSyBi7BVb50H7sj6oq--PzHqx43EGaM1VkKE
+   # Required for AI Reasoning
+   export GEMINI_API_KEY="your-api-key-here"
+
+   # Optional: Config for Communication Officer (Email)
+   export SMTP_USER="your-email@gmail.com"
+   export SMTP_PASS="your-google-app-password"
    ```
 
 ### Quick Start
