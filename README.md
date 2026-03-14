@@ -16,11 +16,11 @@
 * 🤖 **Intelligent Metadata Generation**: Automatically generate and enrich Croissant `.jsonld` metadata from raw dataset files using Gemini 3's advanced multimodal reasoning.
 * 🥐 **Croissant Expert Logic**: Deep integration with the MLCommons Croissant specification for 100% compliant JSON-LD serialization.
 * 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
-* 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
-* 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos to provide deep multi-modal context for datasets.
+* 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs).
+* 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos.
 * 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
-* 🧠 **NLP Entity Extraction**: Detect people, organizations, dates, and locations from any content and structure them into semantic JSON-LD.
-* 📊 **Deep Result Extraction**: Automatically scrape search results, including page titles, snippets, and intelligent keyword extraction (powered by DuckDuckGo HTML for high reliability).
+* 🧠 **NLP Entity Extraction**: Detect people, organizations, dates, AI models, currency and locations.
+* 📧 **Communication Officer**: Securely deliver generated datasets and reports to stakeholders via email.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
@@ -69,6 +69,12 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 2.  **Serialization**: Transforms dataset high-level metadata into standardized JSON-LD.
 3.  **Organization**: Automatically stores output files in `./data/croissant/`.
 4.  **Extensible Design**: Support for `FileObject`, `FileSet`, and complex `RecordSet` mappings.
+
+### 📧 Communication Officer Skill
+The `Communication Officer` skill handles the delivery of results. It:
+1.  **Secure Delivery**: Sends emails using SMTP with TLS.
+2.  **Smart Attachments**: Automatically attaches generated Croissant JSON-LD files.
+3.  **Stakeholder Engagement**: Delivers summaries and datasets directly to researchers.
 
 ## 🛠️ Tech Stack
 
@@ -150,6 +156,21 @@ python skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in 
 # Serialize dataset metadata with Intelligent NLP enrichment
 # (Detects creators, locations, and dates automatically)
 python skills/croissant_expert/scripts/serialize.py metadata.json --nlp
+```
+
+**Using the Wizard Skill (End-to-End):**
+```bash
+# Process a video, enrich metadata, and email the result
+export SMTP_USER="your@email.com"
+export SMTP_PASS="your-password"
+
+python3 skills/wizard/scripts/wizard.py "https://youtube.com/link" "My Dataset" "recipient@example.com"
+```
+
+**Using the Communication Officer Skill:**
+```bash
+# Send a file manually
+python3 skills/communication_officer/scripts/send_email.py "user@example.com" "Subject" "Body" "path/to/file.jsonld"
 ```
 
 **Metadata Generation:**

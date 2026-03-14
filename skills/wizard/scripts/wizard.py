@@ -28,11 +28,12 @@ def run_skill(script_path, args):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python3 wizard.py <CONTENT_OR_URL> [DATASET_NAME]")
+        print("Usage: python3 wizard.py <CONTENT_OR_URL> [DATASET_NAME] [RECIPIENT_EMAIL]")
         sys.exit(1)
 
     input_val = sys.argv[1]
     dataset_name = sys.argv[2] if len(sys.argv) > 2 else "Wizard Generated Dataset"
+    recipient_email = sys.argv[3] if len(sys.argv) > 3 else None
     
     video_id = extract_video_id(input_val)
     content_text = ""
@@ -117,6 +118,16 @@ def main():
     run_skill(croissant_script, [temp_meta_path, output_filename, "--nlp"])
 
     print(f"\n[Wizard] Process Complete! Your Croissant file is ready in data/croissant/{output_filename}")
+
+    # Step 4: Communication (Optional)
+    if recipient_email:
+        print(f"[Wizard] Sending result to {recipient_email}...")
+        comm_script = "skills/communication_officer/scripts/send_email.py"
+        full_output_path = os.path.abspath(f"data/croissant/{output_filename}")
+        subject = f"Croissant Dataset: {dataset_name}"
+        body = f"Hello,\n\nThe Croissant dataset '{dataset_name}' has been successfully generated and refined with NLP metadata.\n\nPlease find the JSON-LD file attached.\n\nBest regards,\nYour Croissant Wizard"
+        
+        run_skill(comm_script, [recipient_email, subject, body, full_output_path])
 
 if __name__ == "__main__":
     main()
