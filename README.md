@@ -145,8 +145,9 @@ python skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in 
 
 **Using the Croissant Expert Skill:**
 ```bash
-# Serialize dataset metadata (output defaults to data/croissant/dataset-croissant.json)
-python skills/croissant_expert/scripts/serialize.py metadata.json
+# Serialize dataset metadata with Intelligent NLP enrichment
+# (Detects creators, locations, and dates automatically)
+python skills/croissant_expert/scripts/serialize.py metadata.json --nlp
 ```
 
 **Metadata Generation:**
