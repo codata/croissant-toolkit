@@ -3,6 +3,7 @@
 
 # Search outputs
 google_search_results.json
+youtube_search_results.json
 
 # Packaged skills
 *.skill
