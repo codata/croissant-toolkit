@@ -20,8 +20,5 @@ Thumbs.db
 # Logs
 *.log
 
-# Gemini internal folder (if any)
-.gemini/
-
 # data folder
 data/

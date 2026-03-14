@@ -123,7 +123,7 @@ def main():
     # Step 4: Communication (Optional)
     if recipient_email:
         print(f"[Wizard] Sending result to {recipient_email}...")
-        comm_script = "skills/communication_officer/scripts/send_email.py"
+        comm_script = ".gemini/skills/communication_officer/scripts/send_email.py"
         full_output_path = os.path.abspath(f"data/croissant/{output_filename}")
         subject = f"Croissant Dataset: {dataset_name}"
         body = f"Hello,\n\nThe Croissant dataset '{dataset_name}' has been successfully generated and refined with NLP metadata.\n\nPlease find the JSON-LD file attached.\n\nBest regards,\nYour Croissant Wizard"
@@ -133,7 +133,7 @@ def main():
     # Step 5: Obsidian Export (Optional)
     if obsidian_vault:
         print(f"[Wizard] Exporting to Obsidian: {obsidian_vault}...")
-        obsidian_script = "skills/obsidian_expert/scripts/to_obsidian.py"
+        obsidian_script = ".gemini/skills/obsidian_expert/scripts/to_obsidian.py"
         full_output_path = f"data/croissant/{output_filename}"
         run_skill(obsidian_script, [full_output_path, obsidian_vault])
 

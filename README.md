@@ -130,38 +130,38 @@ The `Communication Officer` skill handles the delivery of results. It:
 ```bash
 # Search for datasets and extract metadata to google_search_results.json
 # Search and extract structured web data
-python skills/navigator/scripts/navigate.py "MLCommons Croissant"
+python .gemini/skills/navigator/scripts/navigate.py "MLCommons Croissant"
 ```
 
 **Using the Youtuber Skill:**
 ```bash
 # Search and extract structured video data
-python skills/youtuber/scripts/search_youtube.py "NLP data engineering"
+python .gemini/skills/youtuber/scripts/search_youtube.py "NLP data engineering"
 ```
 
 **Using the Transcriber Skill:**
 ```bash
 # Fetch transcripts for a specific video
-python skills/transcriber/scripts/transcribe.py 6cWcZ2G53gE
+python .gemini/skills/transcriber/scripts/transcribe.py 6cWcZ2G53gE
 ```
 
 **Using the Translator Skill:**
 ```bash
 # Translate a specific transcript file
-python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
+python .gemini/skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
 ```
 
 **Using the NLP Expert Skill:**
 ```bash
 # Extract named entities into JSON-LD from text or files
-python skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in Moscow."
+python .gemini/skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in Moscow."
 ```
 
 **Using the Croissant Expert Skill:**
 ```bash
 # Serialize dataset metadata with Intelligent NLP enrichment
 # (Detects creators, locations, and dates automatically)
-python skills/croissant_expert/scripts/serialize.py metadata.json --nlp
+python .gemini/skills/croissant_expert/scripts/serialize.py metadata.json --nlp
 ```
 
 **Using the Wizard Skill (End-to-End):**
@@ -171,19 +171,19 @@ export SMTP_USER="your@email.com"
 export SMTP_PASS="your-password"
 export OBSIDIAN_VAULT_PATH="/path/to/my/vault"
 
-python3 skills/wizard/scripts/wizard.py "https://youtube.com/link" "My Dataset" "recipient@example.com"
+python3 .gemini/skills/wizard/scripts/wizard.py "https://youtube.com/link" "My Dataset" "recipient@example.com"
 ```
 
 **Using the Communication Officer Skill:**
 ```bash
 # Send a file manually
-python3 skills/communication_officer/scripts/send_email.py "user@example.com" "Subject" "Body" "path/to/file.jsonld"
+python3 .gemini/skills/communication_officer/scripts/send_email.py "user@example.com" "Subject" "Body" "path/to/file.jsonld"
 ```
 
 **Using the Obsidian Expert Skill:**
 ```bash
 # Convert a Croissant file to a beautiful Obsidian note
-python3 skills/obsidian_expert/scripts/to_obsidian.py "./data/croissant/dataset.jsonld"
+python3 .gemini/skills/obsidian_expert/scripts/to_obsidian.py "./data/croissant/dataset.jsonld"
 ```
 
 **Metadata Generation:**
