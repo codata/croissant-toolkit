@@ -40,7 +40,8 @@ def format_as_markdown(json_data):
     md += f"name: \"{name}\"\n"
     md += f"source_url: {url}\n"
     if creator_names:
-        md += f"creators: [{', '.join([f'\"{c}\"' for c in creator_names])}]\n"
+        creators_str = ", ".join([f'"{c}"' for c in creator_names])
+        md += f"creators: [{creators_str}]\n"
     md += f"date_created: {datetime.now().strftime('%Y-%m-%d')}\n"
     md += f"tags: [croissant, dataset, nlp]\n"
     md += f"---\n\n"

@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-import google.generativeai as genai
+import subprocess
 
 def extract_entities(text):
     api_key = os.getenv("GEMINI_API_KEY")
@@ -9,9 +9,8 @@ def extract_entities(text):
         print("Error: GEMINI_API_KEY environment variable not set.")
         return None
     
-    genai.configure(api_key=api_key)
-    # Using gemini-3-flash-preview for semantic extraction
-    model = genai.GenerativeModel('gemini-3-flash-preview')
+    # Using stable v1 API and Gemini 2.5 Flash
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={api_key}"
     
     prompt = f"""
     Act as an expert NLP system. Analyze the following text and extract all named entities:
@@ -36,9 +35,30 @@ def extract_entities(text):
     {text}
     """
     
+    payload = {
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }]
+    }
+    
     try:
-        response = model.generate_content(prompt)
-        content = response.text.strip()
+        # Use curl to bypass local library issues
+        result = subprocess.run(
+            ["curl", "-s", "-X", "POST", url, "-H", "Content-Type: application/json", "-d", json.dumps(payload)],
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            print(f"Curl failed: {result.stderr}")
+            return None
+            
+        response_data = json.loads(result.stdout)
+        if "candidates" not in response_data:
+            print(f"API Error: {result.stdout}")
+            return None
+            
+        content = response_data["candidates"][0]["content"]["parts"][0]["text"].strip()
         
         # Cleanup markdown formatting if present
         if "```json" in content:
