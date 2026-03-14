@@ -1,0 +1,23 @@
+# Environment variables
+.env
+
+# Search outputs
+google_search_results.json
+
+# Packaged skills
+*.skill
+
+# Dependencies
+node_modules/
+__pycache__/
+*.py[cod]
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Gemini internal folder (if any)
+.gemini/
