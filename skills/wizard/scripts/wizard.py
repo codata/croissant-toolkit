@@ -36,6 +36,9 @@ def main():
     recipient_email = sys.argv[3] if len(sys.argv) > 3 else None
     obsidian_vault = sys.argv[4] if len(sys.argv) > 4 else os.getenv("OBSIDIAN_VAULT_PATH")
     
+    # Check if Neo4j ingest is requested via environment
+    neo4j_enabled = os.getenv("NEO4J_PASSWORD") is not None
+    
     video_id = extract_video_id(input_val)
     content_text = ""
     source_file = None
@@ -76,7 +79,8 @@ def main():
     # Simple heuristic to extract the translation from the script's output
     # The translate.py script prints [English Translation]: followed by the text
     if "[English Translation]:" in trans_result.stdout:
-        content_text = trans_result.stdout.split("[English Translation]:")[1].split("-" * 50)[0].strip()
+        parts = trans_result.stdout.split("[English Translation]:")
+        content_text = parts[1].split("-" * 50)[0].strip()
         print("[Wizard] Translation/Refinement successful.")
 
     # Step 3: Croissant Generation (which now handles NLP internally)
@@ -84,7 +88,8 @@ def main():
     
     content_str = str(content_text)
     if len(content_str) > 1000:
-        final_desc = content_str[:1000] + "..."
+        desc_chunk = content_str[:1000]
+        final_desc = desc_chunk + "..."
     else:
         final_desc = content_str
 
@@ -120,11 +125,12 @@ def main():
 
     print(f"\n[Wizard] Process Complete! Your Croissant file is ready in data/croissant/{output_filename}")
 
+    full_output_path = os.path.abspath(f"data/croissant/{output_filename}")
+
     # Step 4: Communication (Optional)
     if recipient_email:
         print(f"[Wizard] Sending result to {recipient_email}...")
         comm_script = "skills/communication_officer/scripts/send_email.py"
-        full_output_path = os.path.abspath(f"data/croissant/{output_filename}")
         subject = f"Croissant Dataset: {dataset_name}"
         body = f"Hello,\n\nThe Croissant dataset '{dataset_name}' has been successfully generated and refined with NLP metadata.\n\nPlease find the JSON-LD file attached.\n\nBest regards,\nYour Croissant Wizard"
         
@@ -134,8 +140,13 @@ def main():
     if obsidian_vault:
         print(f"[Wizard] Exporting to Obsidian: {obsidian_vault}...")
         obsidian_script = "skills/obsidian_expert/scripts/to_obsidian.py"
-        full_output_path = f"data/croissant/{output_filename}"
         run_skill(obsidian_script, [full_output_path, obsidian_vault])
+
+    # Step 6: Neo4j Ingestion (Optional)
+    if neo4j_enabled:
+        print(f"[Wizard] Ingesting into Neo4j Knowledge Graph...")
+        neo4j_script = "skills/neo4j_expert/scripts/ingest.py"
+        run_skill(neo4j_script, [full_output_path])
 
 if __name__ == "__main__":
     main()

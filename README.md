@@ -21,7 +21,8 @@
 * 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
 * 🧠 **Multilingual NLP**: Detect people, organizations, dates, AI models, and currency. Preserves original non-English names in metadata.
 * 📧 **Communication Officer**: Securely deliver generated datasets and reports to stakeholders via email.
-* 💎 **Obsidian Expert**: Automatically transform Croissant metadata into rich Markdown notes for personal knowledge management.
+* 💎 **Obsidian Expert**: Automatically transform Croissant metadata into rich Markdown notes.
+* 🕸️ **Neo4j Expert**: Ingest Croissant datasets into a Neo4j Graph Database for relational discovery and semantic search.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
@@ -75,7 +76,11 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 The `Communication Officer` skill handles the delivery of results. It:
 1.  **Secure Delivery**: Sends emails using SMTP with TLS.
 2.  **Smart Attachments**: Automatically attaches generated Croissant JSON-LD files.
-3.  **Stakeholder Engagement**: Delivers summaries and datasets directly to researchers.
+
+### 🕸️ Neo4j Expert Skill
+The `Neo4j Expert` translates Croissant files into a Knowledge Graph. It:
+1.  **Ingestion**: Standardizes JSON-LD into Graph nodes (Dataset, Creator, Location).
+2.  **Semantic Querying**: Allows natural language queries that are translated into Cypher via Gemini 3.
 
 ## 🛠️ Tech Stack
 
@@ -184,6 +189,16 @@ python3 skills/communication_officer/scripts/send_email.py "user@example.com" "S
 ```bash
 # Convert a Croissant file to a beautiful Obsidian note
 python3 skills/obsidian_expert/scripts/to_obsidian.py "./data/croissant/dataset.jsonld"
+```
+
+**Using the Neo4j Expert Skill:**
+```bash
+# Ingest into Neo4j
+export NEO4J_PASSWORD="your-password"
+python3 skills/neo4j_expert/scripts/ingest.py "./data/croissant/dataset.jsonld"
+
+# Query via Natural Language
+python3 skills/neo4j_expert/scripts/query.py "Which datasets were created in France?"
 ```
 
 **Metadata Generation:**
