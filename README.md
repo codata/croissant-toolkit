@@ -71,7 +71,7 @@ The `Youtuber` skill expands the toolkit's reach to video content. It allows the
 
 4. **Configure your environment:**
    ```bash
-   export GEMINI_API_KEY="AIzaSyBi7BVb50H7sj6oq--PzHqx43EGaM1VkKE"
+   export GEMINI_API_KEY="your-api-key-here"  # Example: AIzaSyBi7BVb50H7sj6oq--PzHqx43EGaM1VkKE
    ```
 
 ### Quick Start
