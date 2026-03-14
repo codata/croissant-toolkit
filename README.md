@@ -233,8 +233,10 @@ For the **Gemini 3 Hackathon in Paris**, we recognized an opportunity to leverag
 ## 👥 Team
 
 * **Vyacheslav Tykhonov**
-* *(Add other team members here!)*
+* **Aymen El ouagouti**
+* **Sacha Henneuveux**
+* **Elio Bteich**
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
