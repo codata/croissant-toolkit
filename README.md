@@ -23,6 +23,7 @@
 * 📧 **Communication Officer**: Securely deliver generated datasets and reports to stakeholders via email.
 * 💎 **Obsidian Expert**: Automatically transform Croissant metadata into rich Markdown notes.
 * 🕸️ **Neo4j Expert**: Ingest Croissant datasets into a Neo4j Graph Database for relational discovery and semantic search.
+* 🚶 **Walker Expert**: Extract and explore internal links from a page when deep research is required.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
@@ -81,6 +82,11 @@ The `Communication Officer` skill handles the delivery of results. It:
 The `Neo4j Expert` translates Croissant files into a Knowledge Graph. It:
 1.  **Ingestion**: Standardizes JSON-LD into Graph nodes (Dataset, Creator, Location).
 2.  **Semantic Querying**: Allows natural language queries that are translated into Cypher via Gemini 3.
+
+### 🚶 Walker Skill
+The `Walker` skill performs deep web exploration. It:
+1.  **Deep Crawl**: Extracts all internal links from a specified URL.
+2.  **Autonomous Navigation**: Can be triggered to visit all discovered pages if initial information is insufficient.
 
 ## 🛠️ Tech Stack
 
@@ -199,6 +205,12 @@ python3 skills/neo4j_expert/scripts/ingest.py "./data/croissant/dataset.jsonld"
 
 # Query via Natural Language
 python3 skills/neo4j_expert/scripts/query.py "Which datasets were created in France?"
+```
+
+**Using the Walker Skill:**
+```bash
+# Extract and visit links for deep research
+python3 skills/walker/scripts/walk.py "https://example.com" --limit 5 --navigate
 ```
 
 **Metadata Generation:**
