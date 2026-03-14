@@ -12,12 +12,14 @@
 
 ## 🌟 Key Features
 
+* 🧙 **Wizard Data Integrator**: A single command to rule them all. Orchestrates transcription, translation, and NLP to generate fully-enriched Croissant metadata.
 * 🤖 **Intelligent Metadata Generation**: Automatically generate and enrich Croissant `.jsonld` metadata from raw dataset files using Gemini 3's advanced multimodal reasoning.
 * 🥐 **Croissant Expert Logic**: Deep integration with the MLCommons Croissant specification for 100% compliant JSON-LD serialization.
 * 🌐 **Automated Browser Navigation**: Seamlessly launch Google Chrome and perform Google searches directly from the toolkit.
 * 🎥 **YouTube Video Discovery**: Search and extract structured video data (titles, descriptions, URLs) for dataset tutorials and deep-dives.
 * 📝 **Automated Transcription**: Fetch and store full text transcripts from YouTube videos to provide deep multi-modal context for datasets.
 * 🌍 **Intelligent Translation**: Automatically recognize source languages and translate video scripts or dataset documents precisely into English using Gemini 3.
+* 🧠 **NLP Entity Extraction**: Detect people, organizations, dates, and locations from any content and structure them into semantic JSON-LD.
 * 📊 **Deep Result Extraction**: Automatically scrape search results, including page titles, snippets, and intelligent keyword extraction (powered by DuckDuckGo HTML for high reliability).
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
@@ -43,11 +45,23 @@ The `Transcriber` skill converts video content into a machine-readable format. I
 2.  **Stores**: Organizes transcripts in `./data/transcripts/` for downstream processing.
 3.  **Synthesizes**: Enables Gemini 3 to "understand" video content by reasoning over the full spoken text.
 
+### 🧙 Wizard (Data Integrator) Skill
+The `Wizard` is the master orchestrator of the toolkit. It provides a single entry point for complex data tasks:
+1.  **Automation**: Chaining transcription, translation, and NLP enrichment.
+2.  **Smart Routing**: Automatically detects video URLs vs. local files.
+3.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file in one command.
+
 ### 🌍 Translator Skill
 The `Translator` skill ensures the toolkit is truly global. It:
 1.  **Detection**: Automatically identifies the source language of any text or video script.
 2.  **Precision**: Translates content precisely into English using Gemini 1.5 Flash.
 3.  **Persistence**: Saves translated versions alongside originals for easy integration.
+
+### 🧠 NLP Expert Skill
+The `NLP Expert` skill extracts structured knowledge. It:
+1.  **Recognition**: Identifies persons, organizations, locations, and dates.
+2.  **Semantic Mapping**: Converts detected entities into Schema.org JSON-LD.
+3.  **Contextual Enrichment**: Provides deeper understanding of dataset provenance and coverage.
 
 ### 🥐 Croissant Expert Skill
 The `Croissant Expert` skill is the brains behind the metadata formatting. It:
@@ -64,7 +78,7 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 * **DuckDuckGo HTML Engine**: For robust, non-JS result scraping.
 * **YouTube Data Parser**: Custom scraper for YouTube's initial metadata.
 * **YouTube Transcript API**: For secure retrieval of video caption text.
-* **AI Translation**: High-precision multi-lingual support via Gemini 3.
+* **AI Translation & NLP**: High-precision multi-lingual support and entity extraction via Gemini 3.
 
 ## 🚀 Getting Started
 
@@ -103,37 +117,39 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 **Using the Navigator Skill:**
 ```bash
 # Search for datasets and extract metadata to google_search_results.json
-python skills/navigator/scripts/navigate.py "MNIST dataset croissant format"
+# Search and extract structured web data
+python skills/navigator/scripts/navigate.py "MLCommons Croissant"
 ```
 
 **Using the Youtuber Skill:**
 ```bash
-# Search for YouTube videos about Croissant and extract to youtube_search_results.json
-python skills/youtuber/scripts/youtube_search.py "MLCommons Croissant format"
+# Search and extract structured video data
+python skills/youtuber/scripts/search_youtube.py "NLP data engineering"
 ```
 
 **Using the Transcriber Skill:**
 ```bash
-# Fetch and store the transcript for a specific YouTube video
-python skills/transcriber/scripts/transcribe.py "https://www.youtube.com/watch?v=6cWcZ2G53gE"
-
-# Or batch transcribe all videos from your last search
-python skills/transcriber/scripts/transcribe.py
+# Fetch transcripts for a specific video
+python skills/transcriber/scripts/transcribe.py 6cWcZ2G53gE
 ```
 
 **Using the Translator Skill:**
 ```bash
-# Translate raw text and detect language
-python skills/translator/scripts/translate.py "Bonjour, c'est un plaisir de participer au Hackathon."
-
-# Or translate a specific transcript file
+# Translate a specific transcript file
 python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
+```
+
+**Using the NLP Expert Skill:**
+```bash
+# Extract named entities into JSON-LD from text or files
+python skills/nlp_expert/scripts/extract_entities.py "Sergei Bodrov was born in Moscow."
 ```
 
 **Using the Croissant Expert Skill:**
 ```bash
-# Serialize dataset metadata (output defaults to data/croissant/dataset-croissant.json)
-python skills/croissant_expert/scripts/serialize.py metadata.json
+# Serialize dataset metadata with Intelligent NLP enrichment
+# (Detects creators, locations, and dates automatically)
+python skills/croissant_expert/scripts/serialize.py metadata.json --nlp
 ```
 
 **Metadata Generation:**
