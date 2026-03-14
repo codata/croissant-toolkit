@@ -7,6 +7,8 @@ description: Specialized in the MLCommons Croissant metadata specification. Can 
 
 The Croissant Expert skill provides the core logic for working with the [MLCommons Croissant](https://mlcommons.org/croissant) specification. It is responsible for taking dataset descriptions and turning them into 100% compliant JSON-LD metadata files.
 
+Croissant files are stored locally in `./data/croissant/` as JSON-LD files.
+
 ## Tools
 
 ### 1. Serialize to Croissant JSON-LD

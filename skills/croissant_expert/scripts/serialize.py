@@ -123,7 +123,16 @@ def main():
         sys.exit(1)
 
     input_file = sys.argv[1]
-    output_file = sys.argv[2] if len(sys.argv) > 2 else "dataset-croissant.json"
+    output_dir = "data/croissant"
+    os.makedirs(output_dir, exist_ok=True)
+    
+    if len(sys.argv) > 2:
+        output_file = sys.argv[2]
+        # If user provides a filename without a path, put it in the default dir
+        if not os.path.dirname(output_file):
+            output_file = os.path.join(output_dir, output_file)
+    else:
+        output_file = os.path.join(output_dir, "dataset-croissant.json")
 
     try:
         with open(input_file, 'r') as f:

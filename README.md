@@ -53,7 +53,8 @@ The `Translator` skill ensures the toolkit is truly global. It:
 The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 1.  **Spec Compliance**: Reads and interprets the official MLCommons Croissant specification.
 2.  **Serialization**: Transforms dataset high-level metadata into standardized JSON-LD.
-3.  **Extensible Design**: Support for `FileObject`, `FileSet`, and complex `RecordSet` mappings.
+3.  **Organization**: Automatically stores output files in `./data/croissant/`.
+4.  **Extensible Design**: Support for `FileObject`, `FileSet`, and complex `RecordSet` mappings.
 
 ## 🛠️ Tech Stack
 
@@ -131,8 +132,8 @@ python skills/translator/scripts/translate.py data/transcripts/VIDEO_ID.txt
 
 **Using the Croissant Expert Skill:**
 ```bash
-# Serialize dataset metadata into a compliant Croissant JSON-LD file
-python skills/croissant_expert/scripts/serialize.py metadata.json dataset-croissant.json
+# Serialize dataset metadata (output defaults to data/croissant/dataset-croissant.json)
+python skills/croissant_expert/scripts/serialize.py metadata.json
 ```
 
 **Metadata Generation:**
