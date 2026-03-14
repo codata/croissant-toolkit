@@ -53,13 +53,25 @@ def create_croissant_jsonld(metadata):
 
     # Multi-lingual support helper
     def format_multilingual(value, default_lang="en"):
+        if value is None:
+            return None
         if isinstance(value, dict) and "@value" in value:
             return value
         if isinstance(value, str):
-            # If value is a string, wrap it as an object with the language tag
-            # If default_lang is provided, we use it.
+            # If it's empty, return None
+            if not value.strip():
+                return None
             return { "@language": default_lang, "@value": value }
         return value
+
+    def is_duplicate(item_val, collection):
+        """Robust check for duplicates in a list of multilingual dicts or strings."""
+        val_to_check = item_val["@value"] if isinstance(item_val, dict) else str(item_val)
+        for c in collection:
+            c_val = c["@value"] if isinstance(c, dict) else str(c)
+            if c_val.lower() == val_to_check.lower():
+                return True
+        return False
 
     dataset = {
         "@context": context,
@@ -80,59 +92,51 @@ def create_croissant_jsonld(metadata):
 
     # Enrich with NLP if requested
     if metadata.get("apply_nlp") and extract_entities:
-        print(f"> Applying NLP analysis for: {dataset['name']}")
-        # Use provided nlp_text or fall back to name + description
+        print(f"> Applying NLP analysis for: {metadata.get('name', 'Dataset')}")
         text_to_analyze = metadata.get("nlp_text") or f"{dataset['name']} {dataset['description']}"
         entities = extract_entities(text_to_analyze)
         if entities:
-            # Map Schema.org entities to Dataset fields
             elements = entities.get("itemListElement", [])
             for el in elements:
-                # Handle cases where el is a ListItem or direct entity
                 item = el.get("item") if isinstance(el.get("item"), dict) else el
-                etype = item.get("@type")
-                ename = item.get("name")
+                etype = item.get("@type", "")
+                ename = item.get("name", "")
                 ename_orig = item.get("name_original")
                 elang = item.get("language")
                 
-                # Multilingual name handling
+                if not ename: continue
+
                 m_name = format_multilingual(ename, "en")
+                m_list = [m_name]
                 if ename_orig and elang:
-                    m_name = [m_name, format_multilingual(ename_orig, elang)]
+                    m_list.append(format_multilingual(ename_orig, elang))
+
+                # Normalize type
+                etype = etype.replace("sc:", "")
 
                 if etype in ["Person", "Organization", "CollegeOrUniversity", "EducationalOrganization"]:
                     role_type = "sc:Person" if etype == "Person" else "sc:Organization"
-                    if ename not in [c.get("name") if isinstance(c, dict) else c for c in creator_list]:
-                        creator_list.append({"@type": role_type, "name": m_name})
-                elif etype in ["Place", "City", "Country"]:
-                    if ename not in [n["@value"] if isinstance(n, dict) else n for n in spatial_list]:
-                        if isinstance(m_name, list):
-                            spatial_list.extend(m_name)
-                        else:
-                            spatial_list.append(m_name)
-                elif etype in ["Event", "Date", "Duration"]:
-                    date_val = item.get("startDate") or item.get("name")
-                    if date_val not in [n["@value"] if isinstance(n, dict) else n for n in temporal_list]:
-                        m_date = format_multilingual(date_val, "en")
-                        if ename_orig and elang:
-                            m_date = [m_date, format_multilingual(ename_orig, elang)]
-                        
-                        if isinstance(m_date, list):
-                            temporal_list.extend(m_date)
-                        else:
-                            temporal_list.append(m_date)
-                elif etype in ["MonetaryAmount", "Quantity", "CreativeWork", "SoftwareApplication"]:
-                    # These are useful extras to include as keywords
-                    pass
+                    if not is_duplicate(ename, creator_list):
+                        creator_list.append({"@type": role_type, "name": m_list[0] if len(m_list) == 1 else m_list})
+                elif etype in ["Place", "City", "Country", "Landmark", "AdministrativeArea"]:
+                    for mn in m_list:
+                        if not is_duplicate(mn, spatial_list):
+                            spatial_list.append(mn)
+                elif etype in ["Event", "Date", "Duration", "TemporalEntity"]:
+                    date_val = item.get("startDate") or ename
+                    m_date = format_multilingual(date_val, "en")
+                    d_list = [m_date]
+                    if ename_orig and elang:
+                        d_list.append(format_multilingual(ename_orig, elang))
+                    
+                    for md in d_list:
+                        if not is_duplicate(md, temporal_list):
+                            temporal_list.append(md)
                 
-                # Also add as keywords for better searchability
-                if m_name:
-                    if isinstance(m_name, list):
-                        for mn in m_name:
-                            if mn not in keywords_list:
-                                keywords_list.append(mn)
-                    elif m_name not in keywords_list:
-                        keywords_list.append(m_name)
+                # Always add to keywords
+                for mn in m_list:
+                    if not is_duplicate(mn, keywords_list):
+                        keywords_list.append(mn)
 
     # Clean up empty optional fields
     if not creator_list: dataset.pop("creator", None)
@@ -144,22 +148,28 @@ def create_croissant_jsonld(metadata):
     # Handle distribution
     for dist in metadata.get("distribution", []):
         dist_type = dist.get("type", "FileObject")
+        obj = {}
         if dist_type == "FileObject":
-            distribution_list.append({
+            obj = {
                 "@type": "cr:FileObject",
                 "name": dist.get("name"),
                 "contentUrl": dist.get("contentUrl"),
                 "encodingFormat": dist.get("encodingFormat"),
                 "sha256": dist.get("sha256")
-            })
+            }
         elif dist_type == "FileSet":
-            distribution_list.append({
+            obj = {
                 "@type": "cr:FileSet",
                 "name": dist.get("name"),
                 "containedIn": dist.get("containedIn"),
                 "encodingFormat": dist.get("encodingFormat"),
                 "includes": dist.get("includes")
-            })
+            }
+        
+        # Clean up null values
+        clean_obj = {k: v for k, v in obj.items() if v is not None}
+        if clean_obj:
+            distribution_list.append(clean_obj)
 
     # Handle recordSets
     for rs in metadata.get("recordSet", []):
@@ -233,11 +243,15 @@ def main():
     
     apply_nlp = "--nlp" in sys.argv
     
-    # Filter out flags from potential output_file argument
-    args = [a for a in sys.argv[2:] if not a.startswith("--")]
+    all_args = list(sys.argv)
+    output_file = ""
+    for i in range(2, len(all_args)):
+        arg_val = str(all_args[i])
+        if not arg_val.startswith("--"):
+            output_file = arg_val
+            break
     
-    if args:
-        output_file = args[0]
+    if output_file:
         # If user provides a filename without a path, put it in the default dir
         if not os.path.dirname(output_file):
             output_file = os.path.join(output_dir, output_file)

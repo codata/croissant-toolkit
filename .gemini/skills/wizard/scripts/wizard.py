@@ -23,7 +23,7 @@ def run_skill(script_path, args):
     print(f"\n[Wizard] Running: {' '.join(str_cmd)}")
     result = subprocess.run(str_cmd, capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"[Wizard] Error running {script_path}: {result.stderr}")
+        print(f"[Wizard] Error/Warning: {result.stderr}")
     return result
 
 def main():
@@ -83,8 +83,11 @@ def main():
     print(f"[Wizard] Generating Croissant metadata for: {dataset_name}")
     
     content_str = str(content_text)
-    if len(content_str) > 1000:
-        final_desc = content_str[:1000] + "..."
+    if len(content_str) > 50000:
+        chunk = ""
+        for i in range(50000):
+            chunk += content_str[i]
+        final_desc = chunk + "..."
     else:
         final_desc = content_str
 
