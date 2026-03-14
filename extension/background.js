@@ -9,13 +9,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 sendResponse({ error: "No active tab found" });
                 return;
             }
-            chrome.tabs.sendMessage(tabs[0].id, { action: "extract" }, (response) => {
-                if (chrome.runtime.lastError) {
-                    sendResponse({ error: chrome.runtime.lastError.message });
-                    return;
+
+            const tabId = tabs[0].id;
+
+            chrome.scripting.executeScript(
+                {
+                    target: { tabId },
+                    files: ["content.js"],
+                },
+                () => {
+                    if (chrome.runtime.lastError) {
+                        sendResponse({ error: chrome.runtime.lastError.message });
+                        return;
+                    }
+
+                    chrome.tabs.sendMessage(tabId, { action: "extract" }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            sendResponse({ error: chrome.runtime.lastError.message });
+                            return;
+                        }
+                        sendResponse(response);
+                    });
                 }
-                sendResponse(response);
-            });
+            );
         });
         return true;
     }

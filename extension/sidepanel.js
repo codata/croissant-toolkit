@@ -76,7 +76,11 @@ generateBtn.addEventListener("click", async () => {
             jsonEl.innerHTML = syntaxHighlight(currentCroissant);
             outputEl.classList.remove("hidden");
             chatSection.classList.remove("hidden");
-            setStatus("Croissant generated successfully!", "success");
+
+            const skills = data.skills_used || [];
+            const duration = data.duration_ms ? `${(data.duration_ms / 1000).toFixed(1)}s` : "";
+            const skillsInfo = skills.length > 0 ? ` | Skills: ${skills.join(" -> ")}` : "";
+            setStatus(`Croissant generated!${skillsInfo}${duration ? ` | ${duration}` : ""}`, "success");
         } catch (err) {
             setStatus(`Error: ${err.message}`, "error");
         }
