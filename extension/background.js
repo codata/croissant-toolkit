@@ -1,5 +1,11 @@
 chrome.action.onClicked.addListener((tab) => {
-    chrome.sidePanel.open({ tabId: tab.id });
+    if (chrome.sidePanel) {
+        chrome.sidePanel.open({ tabId: tab.id });
+    } else if (typeof browser !== 'undefined' && browser.sidebarAction) {
+        browser.sidebarAction.open();
+    } else if (chrome.sidebarAction) {
+        chrome.sidebarAction.open();
+    }
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
