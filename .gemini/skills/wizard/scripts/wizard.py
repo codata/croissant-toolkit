@@ -43,7 +43,7 @@ def main():
     # Step 1: Data Acquisition
     if video_id:
         print(f"[Wizard] Detected YouTube Video ID: {video_id}")
-        transcriber_script = "skills/transcriber/scripts/transcribe.py"
+        transcriber_script = ".gemini/skills/transcriber/scripts/transcribe.py"
         run_skill(transcriber_script, [video_id])
         
         transcript_path = f"data/transcripts/{video_id}.txt"
@@ -64,7 +64,7 @@ def main():
         content_text = input_val
 
     # Step 2: Translation (if needed)
-    translator_script = "skills/translator/scripts/translate.py"
+    translator_script = ".gemini/skills/translator/scripts/translate.py"
     # We always run it through the translator to check language and get a clean English string
     print("[Wizard] Checking language and translating if required...")
     
@@ -109,10 +109,12 @@ def main():
         })
 
     temp_meta_path = "data/wizard/temp_metadata.json"
+    if not os.path.exists("data/wizard"):
+        os.makedirs("data/wizard")
     with open(temp_meta_path, 'w') as f:
         json.dump(temp_metadata, f, indent=2)
 
-    croissant_script = "skills/croissant_expert/scripts/serialize.py"
+    croissant_script = ".gemini/skills/croissant_expert/scripts/serialize.py"
     output_filename = dataset_name.lower().replace(" ", "_") + ".jsonld"
     
     # Run the Croissant Expert with the --nlp flag to automatically fill creator/spatial/temporal
