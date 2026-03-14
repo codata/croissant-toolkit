@@ -37,7 +37,10 @@ def main():
         # 4. Save results to data folder for tracking
         import datetime
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        history_file = os.path.join("data", f"test_results_{timestamp}.json")
+        history_dir = os.path.join("data", "navigator")
+        if not os.path.exists(history_dir):
+            os.makedirs(history_dir)
+        history_file = os.path.join(history_dir, f"test_results_{timestamp}.json")
         
         try:
             with open(history_file, 'w', encoding='utf-8') as f:
