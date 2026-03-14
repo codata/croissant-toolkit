@@ -1,0 +1,61 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "sc": "https://schema.org/",
+    "dct": "http://purl.org/dc/terms/",
+    "conformsTo": "dct:conformsTo",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "source": "cr:source",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@id"
+    }
+  },
+  "@type": "sc:Dataset",
+  "name": "Sergei Bodrov Jr. Interview - Survival and Opportunities",
+  "description": "A transcript of a short interview with Sergei Bodrov Jr. discussing survival, opportunities in difficult times, and the concept of a 'prophet' on screen. Includes Russian source and English translation.",
+  "url": "https://www.youtube.com/shorts/Ew0bMtXl6DU",
+  "license": "YouTube Standard License",
+  "dct:conformsTo": "http://mlcommons.org/croissant/1.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "name": "russian-transcript",
+      "contentUrl": "data/transcripts/Ew0bMtXl6DU_ru.txt",
+      "encodingFormat": "text/plain",
+      "sha256": null
+    },
+    {
+      "@type": "cr:FileObject",
+      "name": "english-transcript",
+      "contentUrl": "data/transcripts/Ew0bMtXl6DU_en.txt",
+      "encodingFormat": "text/plain",
+      "sha256": null
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "transcripts",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "name": "language",
+          "dataType": "sc:Text",
+          "source": {}
+        },
+        {
+          "@type": "cr:Field",
+          "name": "text",
+          "dataType": "sc:Text",
+          "source": {}
+        }
+      ]
+    }
+  ]
+}

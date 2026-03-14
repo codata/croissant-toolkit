@@ -1,0 +1,33 @@
+{
+  "name": "Sergei Bodrov Jr. Interview - Survival and Opportunities",
+  "description": "A transcript of a short interview with Sergei Bodrov Jr. discussing survival, opportunities in difficult times, and the concept of a 'prophet' on screen. Includes Russian source and English translation.",
+  "url": "https://www.youtube.com/shorts/Ew0bMtXl6DU",
+  "license": "YouTube Standard License",
+  "distribution": [
+    {
+      "name": "russian-transcript",
+      "contentUrl": "data/transcripts/Ew0bMtXl6DU_ru.txt",
+      "encodingFormat": "text/plain"
+    },
+    {
+      "name": "english-transcript",
+      "contentUrl": "data/transcripts/Ew0bMtXl6DU_en.txt",
+      "encodingFormat": "text/plain"
+    }
+  ],
+  "recordSet": [
+    {
+      "name": "transcripts",
+      "field": [
+        {
+          "name": "language",
+          "dataType": "sc:Text"
+        },
+        {
+          "name": "text",
+          "dataType": "sc:Text"
+        }
+      ]
+    }
+  ]
+}

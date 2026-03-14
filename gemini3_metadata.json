@@ -1,0 +1,33 @@
+{
+  "name": "Google Gemini 3.0 Overview Dataset",
+  "description": "A transcript and overview of Google's Gemini 3.0 AI model, covering its performance in math, coding, and web development. The video includes practical demonstrations of SVG generation and game building.",
+  "url": "https://www.youtube.com/watch?v=Zqnq5mo9ADQ",
+  "license": "YouTube Standard License",
+  "distribution": [
+    {
+      "name": "video-transcript",
+      "contentUrl": "data/transcripts/Zqnq5mo9ADQ.txt",
+      "encodingFormat": "text/plain"
+    }
+  ],
+  "recordSet": [
+    {
+      "name": "video-metadata",
+      "field": [
+        {
+          "name": "title",
+          "dataType": "sc:Text"
+        },
+        {
+          "name": "duration",
+          "dataType": "sc:Text"
+        },
+        {
+          "name": "transcript",
+          "dataType": "sc:Text",
+          "source_file": "video-transcript"
+        }
+      ]
+    }
+  ]
+}
