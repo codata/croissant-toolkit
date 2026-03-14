@@ -65,6 +65,9 @@ def main():
     translator_script = "skills/translator/scripts/translate.py"
     # We always run it through the translator to check language and get a clean English string
     print("[Wizard] Checking language and translating if required...")
+    
+    original_content_text = content_text # Store original for NLP
+    
     # We pass the content_text directly to translate.py
     trans_result = run_skill(translator_script, [content_text])
     
@@ -88,7 +91,8 @@ def main():
         "name": str(dataset_name),
         "description": final_desc,
         "url": str(input_val) if video_id else "https://example.com/dataset",
-        "nlp_text": str(content_text), # Pass full text for deep NLP analysis
+        # Pass both original and translated for multilingual NLP extraction
+        "nlp_text": f"{original_content_text}\n\n{content_text}", 
         "distribution": []
     }
     

@@ -105,12 +105,22 @@ def create_croissant_jsonld(metadata):
                     if ename not in [c.get("name") if isinstance(c, dict) else c for c in creator_list]:
                         creator_list.append({"@type": role_type, "name": m_name})
                 elif etype in ["Place", "City", "Country"]:
-                    if ename not in spatial_list:
-                        spatial_list.append(m_name)
+                    if ename not in [n["@value"] if isinstance(n, dict) else n for n in spatial_list]:
+                        if isinstance(m_name, list):
+                            spatial_list.extend(m_name)
+                        else:
+                            spatial_list.append(m_name)
                 elif etype in ["Event", "Date", "Duration"]:
                     date_val = item.get("startDate") or item.get("name")
-                    if date_val not in temporal_list:
-                        temporal_list.append(format_multilingual(date_val, "en"))
+                    if date_val not in [n["@value"] if isinstance(n, dict) else n for n in temporal_list]:
+                        m_date = format_multilingual(date_val, "en")
+                        if ename_orig and elang:
+                            m_date = [m_date, format_multilingual(ename_orig, elang)]
+                        
+                        if isinstance(m_date, list):
+                            temporal_list.extend(m_date)
+                        else:
+                            temporal_list.append(m_date)
                 elif etype in ["MonetaryAmount", "Quantity", "CreativeWork", "SoftwareApplication"]:
                     # These are useful extras to include as keywords
                     pass
