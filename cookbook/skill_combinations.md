@@ -20,6 +20,8 @@ While each skill is powerful on its own, the real power of the Croissant Toolkit
     3. Use **Transcriber** to get the text.
     4. Use **Croissant Expert** to bundle the URL, the snapshot path, and the transcript into a valid metadata record.
 
+![YouTuber Screenshot](./screenshots/youtuber.png)
+
 ### 2. The "Intelligence Gathering & Alerting"
 **Goal:** Monitor a website, perform deep internal research, and notify a team of findings.
 - **Recipe:** `Navigator` + `Walker` + `NLP Expert` + `Telegram Expert`
@@ -29,6 +31,9 @@ While each skill is powerful on its own, the real power of the Croissant Toolkit
     3. **NLP Expert** summarizes the findings across all crawled pages.
     4. **Telegram Expert** sends the summary and a direct link to the internal channel.
 
+![Intelligence Navigation](./screenshots/navigator.png)
+![Telegram Notification](./screenshots/telegram.png)
+
 ### 3. The "Semantic Knowledge Graph"
 **Goal:** Convert web data into a searchable graph database for relational discovery.
 - **Recipe:** `Wizard` + `Neo4j Expert` + `Librarian`
@@ -37,6 +42,8 @@ While each skill is powerful on its own, the real power of the Croissant Toolkit
     2. **Neo4j Expert** ingests the resulting JSON-LD into a graph.
     3. **Librarian** performs a semantic search across the graph to find hidden connections between datasets.
 
+![Neo4j Graph](./screenshots/neo4j.png)
+
 ### 4. The "Archivist's Workspace"
 **Goal:** Build a persistent research hub in Obsidian from dynamic web content.
 - **Recipe:** `Screenshot Taker` + `NLP Expert` + `Obsidian Expert`
@@ -44,6 +51,19 @@ While each skill is powerful on its own, the real power of the Croissant Toolkit
     1. **Screenshot Taker** captures the full-page visual record (handling consent popups).
     2. **NLP Expert** extracts entities and tags from the page content.
     3. **Obsidian Expert** creates a structured Markdown file linking the image and the extracted metadata.
+
+![Obsidian Notes](./screenshots/obsidian.png)
+
+### 5. The "Standardized Metadata Creator"
+**Goal:** Transform raw data into industry-standard metadata formats.
+- **Recipe:** `Walker` + `NLP Expert` + `Croissant Expert`
+- **Workflow:**
+    1. **Walker** crawls a repository to index files.
+    2. **NLP Expert** extracts descriptions.
+    3. **Croissant Expert** generates a standardized `.jsonld` file following the MLCommons protocol.
+
+![Metadata Standards](./screenshots/croissant.png)
+![Walker in action](./screenshots/walker.png)
 
 ---
 
