@@ -28,46 +28,82 @@ def parse_markdown_slides(md_path):
     return slides
 
 def render_slide_to_image(text, output_path, size=(1280, 720)):
-    """Renders Markdown text to a premium-looking slide image using Pillow."""
-    # Create background with a subtle gradient or dark theme
-    img = Image.new('RGB', size, (15, 15, 15))
-    draw = ImageDraw.Draw(img)
+    """Renders Markdown text to a premium-looking slide image using AI-generated backgrounds."""
     
-    # Try to load a nice font, fallback to default
+    asset_dir = os.path.join(os.path.dirname(__file__), "assets")
+    
+    # Intelligently select background based on content
+    bg_map = {
+        "Discovery": "bg_discovery.png",
+        "Solution": "bg_discovery.png",
+        "Problem": "bg_discovery.png",
+        "Intelligence": "bg_intelligence.png",
+        "NLP": "bg_intelligence.png",
+        "Technical": "bg_intelligence.png",
+        "Impact": "bg_persistence.png",
+        "Future": "bg_persistence.png",
+        "Knowledge": "bg_persistence.png"
+    }
+    
+    bg_file = "bg_intro.png" # Default
+    for key, val in bg_map.items():
+        if key.lower() in text.lower():
+            bg_file = val
+            break
+            
+    bg_path = os.path.join(asset_dir, bg_file)
+    
+    if os.path.exists(bg_path):
+        img = Image.open(bg_path).resize(size)
+    else:
+        img = Image.new('RGB', size, (15, 15, 15))
+        
+    draw = ImageDraw.Draw(img, 'RGBA')
+    
+    # Create Glassmorphism Overlay (Semi-transparent card)
+    card_margin = 60
+    draw.rectangle(
+        [card_margin, card_margin, size[0] - card_margin, size[1] - card_margin],
+        fill=(0, 0, 0, 160), # Dark translucent
+        outline=(255, 255, 255, 40), # Subtle white border
+        width=2
+    )
+    
     try:
-        # Common Font paths on macOS
         title_font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial Bold.ttf", 60)
-        body_font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 35)
+        subtitle_font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial Bold.ttf", 40)
+        body_font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 32)
     except:
         title_font = ImageFont.load_default()
+        subtitle_font = ImageFont.load_default()
         body_font = ImageFont.load_default()
 
     lines = text.split('\n')
-    y_offset = 100
+    y_offset = 120
     
-    # Simple rendering logic
     for line in lines:
         line = line.strip()
         if not line:
-            y_offset += 20
+            y_offset += 25
             continue
             
         if line.startswith('# '):
-            draw.text((80, y_offset), line[2:], font=title_font, fill=(66, 133, 244)) # Google Blue
-            y_offset += 80
+            draw.text((100, y_offset), line[2:], font=title_font, fill=(255, 255, 255))
+            y_offset += 90
         elif line.startswith('## '):
-            draw.text((80, y_offset), line[3:], font=body_font, fill=(52, 168, 83)) # Google Green
-            y_offset += 60
+            draw.text((100, y_offset), line[3:], font=subtitle_font, fill=(66, 133, 244)) # Google Blue
+            y_offset += 70
         else:
-            # Handle bullet points or plain text
-            draw.text((100, y_offset), line, font=body_font, fill=(230, 230, 230))
-            y_offset += 50
+            # Bullet point or content
+            text_color = (220, 220, 220, 255)
+            draw.text((120, y_offset), line, font=body_font, fill=text_color)
+            y_offset += 55
             
-        if y_offset > size[1] - 50:
+        if y_offset > size[1] - 120:
             break
 
-    # Add a glowing 🥐 icon in the corner
-    draw.text((size[0]-100, size[1]-100), "🥐", font=title_font, fill=(251, 188, 5))
+    # Add a glowing 🥐 brand mark
+    draw.text((size[0]-140, size[1]-130), "🥐", font=title_font, fill=(251, 188, 5))
     
     img.save(output_path)
 
