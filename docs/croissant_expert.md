@@ -23,4 +23,5 @@ The input JSON should follow this structure:
 ## Capabilities
 - **Spec Interpretation**: Access to the latest MLCommons Croissant standard.
 - **JSON-LD Generation**: Deep understanding of `@context`, `@type`, and linked data principles.
+- **NLP Enrichment**: Using the `--nlp` flag, it automatically detects creators, locations, and dates from the description or provided text to populate Schema.org properties.
 - **Validation-Ready**: Output files are designed to pass the official Croissant validator.

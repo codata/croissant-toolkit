@@ -7,13 +7,15 @@ The Orchestrator Expert is the master agent that has comprehensive knowledge and
 ## Available Skills Knowledge
 
 The Orchestrator Expert knows how to use the following skills:
+- **Communication Officer (`communication_officer`)**: Sends results via email.
 - **Croissant Expert (`croissant_expert`)**: Generates MLCommons Croissant metadata.
 - **Navigator (`navigator`)**: Performs web searches for information gathering.
-- **NLP Expert (`nlp_expert`)**: Handles text summarization, keyword extraction, and structural text adjustments.
+- **NLP Expert (`nlp_expert`)**: Handles text summarization, keyword extraction, and entities detection.
+- **Telegram Expert (`telegram_expert`)**: Sends notifications and files to Telegram.
 - **Tester (`tester`, `skills-testor`)**: Validates that other skills function correctly.
-- **Transcriber (`transcriber`)**: Converts audio files to text.
+- **Transcriber (`transcriber`)**: Converts video audio to text.
 - **Translator (`translator`)**: Translates text across multiple languages.
-- **YouTuber (`youtuber`)**: Extracts informative metadata and audio from YouTube videos.
+- **YouTuber (`youtuber`)**: Extracts informative metadata and transcripts from YouTube videos.
 
 ## Usage
 

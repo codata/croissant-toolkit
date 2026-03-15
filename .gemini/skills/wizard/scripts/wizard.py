@@ -129,7 +129,7 @@ def main():
 
     full_output_path = os.path.abspath(f"data/croissant/{output_filename}")
 
-    # Step 4: Communication (Optional)
+    # Step 4: Communication (Optional - Email)
     if recipient_email:
         print(f"[Wizard] Sending result to {recipient_email}...")
         comm_script = ".gemini/skills/communication_officer/scripts/send_email.py"
@@ -138,13 +138,23 @@ def main():
         
         run_skill(comm_script, [recipient_email, subject, body, full_output_path])
 
-    # Step 5: Obsidian Export (Optional)
+    # Step 5: Telegram Notification (Optional)
+    telegram_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    if telegram_token and telegram_chat_id:
+        print(f"[Wizard] Sending notification to Telegram...")
+        tg_script = ".gemini/skills/telegram_expert/scripts/send_telegram.py"
+        tg_message = f"🚀 *Croissant Wizard Update*\n\nDataset: `{dataset_name}`\nStatus: Generated & Refined\n\n_Sent from Croissant Toolkit_"
+        
+        run_skill(tg_script, [tg_message, full_output_path])
+
+    # Step 6: Obsidian Export (Optional)
     if obsidian_vault:
         print(f"[Wizard] Exporting to Obsidian: {obsidian_vault}...")
         obsidian_script = ".gemini/skills/obsidian_expert/scripts/to_obsidian.py"
         run_skill(obsidian_script, [full_output_path, obsidian_vault])
 
-    # Step 6: Neo4j Ingestion (Optional)
+    # Step 7: Neo4j Ingestion (Optional)
     if neo4j_enabled:
         print(f"[Wizard] Ingesting into Neo4j Knowledge Graph...")
         neo4j_script = "skills/neo4j_expert/scripts/ingest.py"

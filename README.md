@@ -74,9 +74,15 @@ The `Croissant Expert` skill is the brains behind the metadata formatting. It:
 4.  **Extensible Design**: Support for `FileObject`, `FileSet`, and complex `RecordSet` mappings.
 
 ### 📧 Communication Officer Skill
-The `Communication Officer` skill handles the delivery of results. It:
+The `Communication Officer` skill handles the delivery of results via email. It:
 1.  **Secure Delivery**: Sends emails using SMTP with TLS.
 2.  **Smart Attachments**: Automatically attaches generated Croissant JSON-LD files.
+
+### 🤖 Telegram Expert Skill
+The `Telegram Expert` skill provides instant messaging notifications. It:
+1.  **Instant Alerts**: Sends status updates and summaries to a Telegram chat or channel.
+2.  **File Delivery**: Uploads generated `.jsonld` files directly to Telegram.
+3.  **Bot API**: Uses the standard Telegram Bot API for reliable communication.
 
 ### 🕸️ Neo4j Expert Skill
 The `Neo4j Expert` translates Croissant files into a Knowledge Graph. It:
@@ -133,6 +139,10 @@ The `Walker` skill performs deep web exploration. It:
    # Optional: Config for Communication Officer (Email)
    export SMTP_USER="your-email@gmail.com"
    export SMTP_PASS="your-google-app-password"
+
+   # Optional: Config for Telegram Expert
+   export TELEGRAM_BOT_TOKEN="your-bot-token"
+   export TELEGRAM_CHAT_ID="your-chat-or-channel-id"
    ```
 
 ### Quick Start
@@ -189,6 +199,15 @@ python3 .gemini/skills/wizard/scripts/wizard.py "https://youtube.com/link" "My D
 ```bash
 # Send a file manually
 python3 .gemini/skills/communication_officer/scripts/send_email.py "user@example.com" "Subject" "Body" "path/to/file.jsonld"
+```
+
+**Using the Telegram Expert Skill:**
+```bash
+# Send a notification manually
+python3 .gemini/skills/telegram_expert/scripts/send_telegram.py "Notification message"
+
+# Send with an attachment
+python3 .gemini/skills/telegram_expert/scripts/send_telegram.py "Check this file" "./data/croissant/dataset.jsonld"
 ```
 
 **Using the Obsidian Expert Skill:**
@@ -257,10 +276,20 @@ Managing ML dataset metadata is traditionally a tedious and manual process. Whil
 
 For the **Gemini 3 Hackathon in Paris**, we recognized an opportunity to leverage **Gemini 3's** unmatched contextual understanding and long context window to completely automate this pipeline. Our goal is to bring joy back to data engineering, accelerate the open-data ecosystem, and make data more discoverable and interoperable for everyone.
 
+## 🏢 Project Structure
+
+For detailed documentation on each skill, please refer to the [`docs/`](./docs/) directory:
+- [Communication Officer](./docs/communication_officer.md)
+- [Telegram Expert](./docs/telegram_expert.md)
+- [Croissant Expert](./docs/croissant_expert.md)
+- [NLP Expert](./docs/nlp_expert.md)
+- [Navigator](./docs/navigator.md)
+- [YouTuber](./docs/youtuber.md)
+
 ## 👥 Team
 
-* **Vyacheslav Tykhonov**
-* *(Add other team members here!)*
+* **Vyacheslav Tykhonov** - *Lead Developer & Architect* 
+* **Elio** - *Core Team Member*
 
 ## 📄 License
 
