@@ -318,6 +318,12 @@ Managing ML dataset metadata is traditionally a tedious and manual process. Whil
 
 For the **Gemini 3 Hackathon in Paris**, we recognized an opportunity to leverage **Gemini 3's** unmatched contextual understanding and long context window to completely automate this pipeline. Our goal is to bring joy back to data engineering, accelerate the open-data ecosystem, and make data more discoverable and interoperable for everyone.
 
+## 📖 Documentation & Learning
+ 
+* [**Project Structure & Individual Skills**](./README.md#project-structure): Detailed breakdown of every skill in the toolkit.
+* [**📖 Skill Cookbook**](./cookbook/skill_combinations.md): Learn how to combine multiple skills into powerful, autonomous workflows.
+* [**Testing Guide**](./README.md#-testing): How to run the automated integrity suite.
+
 ## 🏢 Project Structure
 
 For detailed documentation on each skill, please refer to the [`docs/`](./docs/) directory:
