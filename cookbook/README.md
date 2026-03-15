@@ -4,7 +4,10 @@ This directory contains advanced guides and "recipes" for building complex agent
 
 ## 📖 Available Recipes
 
-### 1. [Skill Combinations & Use Cases](./skill_combinations.md)
+### 1. [Skills & Utility Overview](./skills_utility.md)
+A high-level summary of what the toolkit can do: browsing, transcribing, translating, and building knowledge bases.
+
+### 2. [Skill Combinations & Use Cases](./skill_combinations.md)
 Learn how to chain the following agents together:
 - **YouTube Researcher**: Chains YouTuber, Transcriber, and Screenshot Taker.
 - **Web Intelligence**: Chains Navigator, Walker, and Telegram.
