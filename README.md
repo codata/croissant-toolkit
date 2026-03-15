@@ -288,10 +288,10 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 
 ## 👥 Team
 
-* **Vyacheslav Tykhonov**
-* **Aymen El ouagouti**
-* **Sacha Henneuveux**
-* **Elio Bteich**
+* **[Slava Tykhonov](https://github.com/4tikhonov)**
+* **[Aymen El ouagouti](https://github.com/aymen-eloagouti)**
+* **[Sacha Henneuveux](https://github.com/sachenneuveux)**
+* **[Elio Bteich](https://github.com/elio-bteich)**
 
 ## 📄 License
 
