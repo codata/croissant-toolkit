@@ -26,9 +26,9 @@ The Croissant Toolkit is a modular suite of AI-powered "experts" designed to aut
 - **Utility**: Ensures your work follows global metadata standards.
 - **Why it's useful**: `Croissant Expert` packages your metadata into the [MLCommons Croissant](https://mlcommons.org/croissant) format, making it instantly usable by other AI models and tools. `Librarian` lets you search this standardized library semantically.
 
-### 6. Real-Time Alerting (`Telegram Expert`)
-- **Utility**: Bridges the gap between the toolkit and your mobile devices.
-- **Why it's useful**: Get notified instantly when a long crawl finishes or when a specific data pattern is discovered.
+### 6. Real-Time Alerting & Reporting (`Telegram Expert`, `Communication Officer`)
+- **Utility**: Bridges the gap between the toolkit and your inbox or mobile devices.
+- **Why it's useful**: Get notified instantly when a long crawl finishes. The **Communication Officer** can send professionally formatted **email reports** with research summaries and attachments directly to your inbox.
 
 ---
 
@@ -39,7 +39,8 @@ Imagine you are researching "Quantum Computing developments in France".
 1. **Discover**: `YouTuber` finds French videos on the topic.
 2. **Transcript**: `Transcriber` gets the original French text.
 3. **Translate**: `NLP Expert` translates it to English and summarizes it.
-4. **Answer**: You can ask **multilingual questions** like *"What did the French researcher say about error correction?"* and get the answer from the original source.
+4. **Report**: `Communication Officer` sends the English summary and the French transcript link to your **email**.
+5. **Answer**: You can ask **multilingual questions** like *"What did the French researcher say about error correction?"* and get the answer from the original source.
 
 ### 🧠 Building an Automated Second Brain
 Automatically track a specific field (e.g., "Climate Change Data"):

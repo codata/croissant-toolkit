@@ -24,12 +24,13 @@ While each skill is powerful on its own, the real power of the Croissant Toolkit
 
 ### 2. The "Intelligence Gathering & Alerting"
 **Goal:** Monitor a website, perform deep internal research, and notify a team of findings.
-- **Recipe:** `Navigator` + `Walker` + `NLP Expert` + `Telegram Expert`
+- **Recipe:** `Navigator` + `Walker` + `NLP Expert` + `Telegram Expert` + `Communication Officer`
 - **Workflow:**
     1. **Navigator** finds the primary data source URL.
     2. **Walker** explores all internal links to find deep "About" or "Legal" pages.
     3. **NLP Expert** summarizes the findings across all crawled pages.
-    4. **Telegram Expert** sends the summary and a direct link to the internal channel.
+    4. **Telegram Expert** sends a quick notification to the team.
+    5. **Communication Officer** sends a comprehensive PDF/HTML report to the stakeholders' **email**.
 
 ![Intelligence Navigation](./screenshots/navigator.png)
 ![Telegram Notification](./screenshots/telegram.png)
