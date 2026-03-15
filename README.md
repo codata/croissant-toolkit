@@ -24,6 +24,7 @@
 * 💎 **Obsidian Expert**: Automatically transform Croissant metadata into rich Markdown notes.
 * 🕸️ **Neo4j Expert**: Ingest Croissant datasets into a Neo4j Graph Database for relational discovery and semantic search.
 * 🚶 **Walker Expert**: Extract and explore internal links from a page when deep research is required.
+* 📸 **Screenshot Taker**: Automatically capture high-quality snapshots of web pages for visual archiving and analysis.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
@@ -230,6 +231,18 @@ python3 skills/neo4j_expert/scripts/query.py "Which datasets were created in Fra
 ```bash
 # Extract and visit links for deep research
 python3 skills/walker/scripts/walk.py "https://example.com" --limit 5 --navigate
+```
+
+**Using the Screenshot Taker Skill:**
+```bash
+# Take a standard screenshot
+python3 .gemini/skills/screenshot_taker/scripts/take_screenshot.py "https://www.google.com"
+
+# Take a full-page screenshot
+python3 .gemini/skills/screenshot_taker/scripts/take_screenshot.py "https://mlcommons.org/croissant" --full_page
+
+# Take a YouTube snapshot (automatically waits for ads)
+python3 .gemini/skills/youtuber/scripts/video_snapshot.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
 
 **Metadata Generation:**

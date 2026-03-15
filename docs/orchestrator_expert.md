@@ -11,6 +11,7 @@ The Orchestrator Expert knows how to use the following skills:
 - **Croissant Expert (`croissant_expert`)**: Generates MLCommons Croissant metadata.
 - **Navigator (`navigator`)**: Performs web searches for information gathering.
 - **NLP Expert (`nlp_expert`)**: Handles text summarization, keyword extraction, and entities detection.
+- **Screenshot Taker (`screenshot_taker`)**: Captures visual snapshots of web pages.
 - **Telegram Expert (`telegram_expert`)**: Sends notifications and files to Telegram.
 - **Tester (`tester`, `skills-testor`)**: Validates that other skills function correctly.
 - **Transcriber (`transcriber`)**: Converts video audio to text.
