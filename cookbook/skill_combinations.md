@@ -55,7 +55,18 @@ While each skill is powerful on its own, the real power of the Croissant Toolkit
 
 ![Obsidian Notes](./screenshots/obsidian.png)
 
-### 5. The "Standardized Metadata Creator"
+### 5. Automated Intelligence Reporting
+**Goal:** Research the latest AI breakthroughs and send a structured report to stakeholders.
+- **Recipe:** `YouTuber` + `NLP Expert` + `Communication Officer`
+- **Workflow:**
+    1. **YouTuber** searches for "Gemini 3.1" and collects metadata.
+    2. **NLP Expert** prioritizes the top 3 videos and extracts their core features.
+    3. **Communication Officer** formats the findings into a professional email and sends it with the `.jsonld` metadata attached.
+
+![Discovery Phase](./screenshots/gemini_31_discovery.png)
+![Email Report Sent](./screenshots/email_report_mockup.png)
+
+### 6. The "Standardized Metadata Creator"
 **Goal:** Transform raw data into industry-standard metadata formats.
 - **Recipe:** `Walker` + `NLP Expert` + `Croissant Expert`
 - **Workflow:**
