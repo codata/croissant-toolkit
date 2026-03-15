@@ -238,6 +238,35 @@ python3 skills/walker/scripts/walk.py "https://example.com" --limit 5 --navigate
 python main.py generate ./my-local-dataset
 ```
 
+## 🧪 Testing
+ 
+This toolkit includes a comprehensive suite of automated tests to ensure all skills are functioning correctly.
+ 
+### 1. Running All Tests
+You can execute the entire test suite using the `test-all` skill runner:
+```bash
+python3 .gemini/skills/test-all/scripts/test_all.py
+```
+This script will discover and execute all `test_*.py` files within the `.gemini/skills/` directory and provide a summary of the results.
+ 
+### 2. Using `gemini-cli`
+The **Gemini CLI** is the primary way to interact with the toolkit's intelligent agents. It allows you to run skills using natural language or direct commands.
+ 
+**Install Gemini CLI:**
+```bash
+npm install -g @google/gemini-cli
+```
+ 
+**Execute tests via CLI:**
+You can ask the agent to run tests for you:
+```bash
+gemini "Use the test-all skill to verify the system integrity"
+```
+Or target a specific skill:
+```bash
+gemini "Test the Navigator skill and ensure it returns results"
+```
+ 
 ## 🌐 Chrome Extension — Croissant Converter
 
 A Chrome extension that converts any web page into Croissant JSON-LD metadata, with a contextual chat powered by Gemini 3.
