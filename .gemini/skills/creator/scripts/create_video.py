@@ -3,7 +3,7 @@ import sys
 from PIL import Image
 
 def create_intro_presentation():
-    """Stitches images into a 30-second presentation: Hackathon start -> Skill by Skill."""
+    """Stitches images into a GIF presentation: Hackathon start -> Skill by Skill."""
     
     asset_dir = os.path.join(os.path.dirname(__file__), "assets")
     screenshot_dir = os.path.join(os.path.dirname(__file__), "../../../../cookbook/screenshots")
@@ -36,7 +36,7 @@ def create_intro_presentation():
     frames = []
     target_size = (1024, 768)
     
-    print(f"[Creator] Orchestrating 30-second skill-by-skill presentation ({len(image_paths)} slides)...")
+    print(f"[Creator] Orchestrating GIF skill-by-skill presentation ({len(image_paths)} slides)...")
     
     for path in image_paths:
         if not os.path.exists(path):
@@ -60,13 +60,14 @@ def create_intro_presentation():
         print("[Creator] Error: No frames gathered.")
         return
 
-    output_path = os.path.join(output_dir, "croissant_toolkit_skill_by_skill.gif")
+    output_path_gif = os.path.join(output_dir, "croissant_toolkit_presentation.gif")
+    output_path_avi = os.path.join(output_dir, "croissant_toolkit_presentation.avi")
     
-    print(f"[Creator] Saving high-fidelity skill-by-skill sequence to: {output_path}")
+    print(f"[Creator] Saving high-fidelity skill-by-skill GIF to: {output_path_gif}")
     
     # Save as animated GIF (10fps)
     frames[0].save(
-        output_path,
+        output_path_gif,
         save_all=True,
         append_images=frames[1:],
         duration=100,
@@ -74,7 +75,38 @@ def create_intro_presentation():
         optimize=False
     )
     
-    print(f"[Creator] Skill-by-Skill Presentation Ready! [RESULT_PATH]: {os.path.abspath(output_path)}")
+    # Try to generate AVI using FFmpeg
+    ffmpeg_bin = "/opt/homebrew/bin/ffmpeg"
+    if os.path.exists(ffmpeg_bin):
+        print(f"[Creator] Generating AVI video using FFmpeg: {output_path_avi}")
+        import subprocess
+        import tempfile
+        import shutil
+        
+        temp_dir = tempfile.mkdtemp()
+        try:
+            # Save frames as temporary PNGs
+            for i, frame in enumerate(frames):
+                frame.save(os.path.join(temp_dir, f"frame_{i:04d}.png"))
+            
+            # Use ffmpeg to stitch PNGs into AVI
+            # -y: overwrite, -framerate 10: speed, -i: input pattern, -c:v mpeg4: codec
+            cmd = [
+                ffmpeg_bin, "-y", "-framerate", "10",
+                "-i", os.path.join(temp_dir, "frame_%04d.png"),
+                "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                output_path_avi
+            ]
+            subprocess.run(cmd, check=True, capture_output=True)
+            print(f"[Creator] AVI Video Ready! [RESULT_PATH]: {os.path.abspath(output_path_avi)}")
+        except Exception as e:
+            print(f"[Creator] Error generating AVI: {e}")
+        finally:
+            shutil.rmtree(temp_dir)
+    else:
+        print("[Creator] FFmpeg not found at expected path. Skipping AVI generation.")
+    
+    print(f"[Creator] Finished! GIF available at: {os.path.abspath(output_path_gif)}")
 
 if __name__ == "__main__":
     create_intro_presentation()
