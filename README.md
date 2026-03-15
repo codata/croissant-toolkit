@@ -288,9 +288,11 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 
 ## 👥 Team
 
-* **Vyacheslav Tykhonov** - *Lead Developer & Architect* 
-* **Elio** - *Core Team Member*
+* **Vyacheslav Tykhonov**
+* **Aymen El ouagouti**
+* **Sacha Henneuveux**
+* **Elio Bteich**
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
