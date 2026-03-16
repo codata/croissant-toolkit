@@ -1,5 +1,6 @@
 # 🥐 Croissant Toolkit
 
+
 [![Event](https://img.shields.io/badge/Event-Gemini_3_Hackathon_Paris-4285F4?style=for-the-badge&logo=google)](https://ai.google.dev/)
 [![Status](https://img.shields.io/badge/Status-Hackathon_Prototype-FFC107?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-4CAF50?style=for-the-badge)](LICENSE)
@@ -344,3 +345,4 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 ## 📄 License
 
 This project is licensed under the MIT License.
+ 
