@@ -24,7 +24,7 @@
 * 💎 **Obsidian Expert**: Automatically transform Croissant metadata into rich Markdown notes.
 * 🕸️ **Neo4j Expert**: Ingest Croissant datasets into a Neo4j Graph Database for relational discovery and semantic search.
 * 🚶 **Walker Expert**: Extract and explore internal links from a page when deep research is required.
-* 📸 **Screenshot Taker**: Automatically capture high-quality snapshots of web pages for visual archiving and analysis.
+* 📸 **Photograph**: Automatically capture high-quality snapshots of web pages and record screen activity during process execution.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
@@ -94,6 +94,12 @@ The `Neo4j Expert` translates Croissant files into a Knowledge Graph. It:
 The `Walker` skill performs deep web exploration. It:
 1.  **Deep Crawl**: Extracts all internal links from a specified URL.
 2.  **Autonomous Navigation**: Can be triggered to visit all discovered pages if initial information is insufficient.
+
+### 🔒 ODRL Expert Skill
+The `ODRL Expert` provides a decentralized security layer. It:
+1.  **Identity**: Manages your master identity via DIDs (Decentralized Identifiers).
+2.  **Rights Management**: Enforces ODRL policies to restrict or permit skill usage.
+3.  **Skill Vault**: Encrypts skill source code using your private key to ensure physical security.
 
 ## 🛠️ Tech Stack
 
@@ -233,13 +239,16 @@ python3 skills/neo4j_expert/scripts/query.py "Which datasets were created in Fra
 python3 skills/walker/scripts/walk.py "https://example.com" --limit 5 --navigate
 ```
 
-**Using the Screenshot Taker Skill:**
+**Using the Photograph Skill:**
 ```bash
 # Take a standard screenshot
-python3 .gemini/skills/screenshot_taker/scripts/take_screenshot.py "https://www.google.com"
+python3 .gemini/skills/photograph/scripts/take_screenshot.py "https://www.google.com"
 
 # Take a full-page screenshot
-python3 .gemini/skills/screenshot_taker/scripts/take_screenshot.py "https://mlcommons.org/croissant" --full_page
+python3 .gemini/skills/photograph/scripts/take_screenshot.py "https://mlcommons.org/croissant" --full_page
+
+# Record the screen while running a process (e.g. searching YouTube)
+python3 .gemini/skills/photograph/scripts/record_screen.py --command "python3 .gemini/skills/youtuber/scripts/youtube_search.py MLCommons"
 
 # Take a YouTube snapshot (automatically waits for ads)
 python3 .gemini/skills/youtuber/scripts/video_snapshot.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
@@ -249,6 +258,24 @@ python3 .gemini/skills/youtuber/scripts/video_snapshot.py "https://www.youtube.c
 ```bash
 # Example: Generate a Croissant metadata file from a raw dataset directory
 python main.py generate ./my-local-dataset
+```
+
+### 🔒 ODRL & Skill Vault
+The toolkit uses the [CODATA ODRL Infrastructure](https://odrl.dev.codata.org/) for decentralized access control.
+
+**Initialize your security wallet:**
+```bash
+python3 .gemini/skills/odrl_expert/scripts/odrl_client.py init
+```
+
+**Encrypt/Vault a skill:**
+```bash
+python3 .gemini/skills/odrl_expert/scripts/odrl_client.py vault-skill "fact-checker"
+```
+
+**Decrypt/Restore a skill:**
+```bash
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py unvault-skill "fact-checker"
 ```
 
 ## 🧪 Testing
@@ -333,6 +360,7 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 - [NLP Expert](./docs/nlp_expert.md)
 - [Navigator](./docs/navigator.md)
 - [YouTuber](./docs/youtuber.md)
+- [Photograph](./docs/photograph.md)
 
 ## 👥 Team
 
