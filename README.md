@@ -28,6 +28,8 @@
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
+* 🕵️ **Fact Checker**: High-fidelity AI analysis of sensitive claims, legal conflicts, and innovation impacts with visual passage highlighting and video evidence.
+* 📊 **Claims Detection**: Automated extraction of verifiable factual statements with MD5-based unique IDs and Schema.org semantic mapping.
 
 ## 🧩 Skills & Tools
 
@@ -53,7 +55,8 @@ The `Transcriber` skill converts video content into a machine-readable format. I
 The `Wizard` is the master orchestrator of the toolkit. It provides a single entry point for complex data tasks:
 1.  **Automation**: Chaining transcription, translation, and NLP enrichment.
 2.  **Multilingual Support**: Captures entities in both English and their original language (e.g., Ukrainian, Russian, French) using JSON-LD tags.
-3.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file, with optional email delivery to stakeholders.
+3.  **Synthesis**: Combines factual measurements and AI-driven fact-checking into a single investigative report.
+4.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file with automated verification and secure vaulting.
 
 ### 🌍 Translator Skill
 The `Translator` skill ensures the toolkit is truly global. It:
@@ -98,8 +101,21 @@ The `Walker` skill performs deep web exploration. It:
 ### 🔒 ODRL Expert Skill
 The `ODRL Expert` provides a decentralized security layer. It:
 1.  **Identity**: Manages your master identity via DIDs (Decentralized Identifiers).
-2.  **Rights Management**: Enforces ODRL policies to restrict or permit skill usage.
+2.  **Rights Management**: Enforces ODRL policies to restrict or permit skill usage via the [CODATA OAC Profile](https://odrl.dev.codata.org/docs).
 3.  **Skill Vault**: Encrypts skill source code using your private key to ensure physical security.
+4.  **Branding**: Automatically applies CODATA/Croissant branding and provenance metadata to generated artifacts.
+
+### 🕵️ Fact Checker Skill
+The `Fact Checker` performing deep investigative analysis on a document or URL. It:
+1.  **Sensitive Discovery**: Detects high-stakes claims related to terminations, legal conflicts, and corporate sensitive data.
+2.  **Innovation Summary**: Synthesizes the cognitive impact and innovative potential of the analyzed content.
+3.  **Visual Evidence**: Generates highlight-annotated video recordings of its reasoning process.
+
+### 📊 Claims Detection (Data Expert) Skill
+The `Claims Detection` skill transforms documents into structured factual datasets. It:
+1.  **Granular Extraction**: Isolates core factual claims and their original context sentences.
+2.  **Verifiable IDs**: Assigns unique MD5 hashes to every claim for reproducible identification.
+3.  **Standardized Export**: Generates `data/claims.json` with full DID attribution and truth probability scoring.
 
 ## 🛠️ Tech Stack
 
@@ -361,6 +377,8 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 - [Navigator](./docs/navigator.md)
 - [YouTuber](./docs/youtuber.md)
 - [Photograph](./docs/photograph.md)
+- [Fact Checker](./docs/fact_checker.md)
+- [Claims Detection (Data Expert)](./docs/data_expert.md)
 
 ## 👥 Team
 
