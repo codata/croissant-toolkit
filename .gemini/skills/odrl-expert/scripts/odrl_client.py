@@ -12,11 +12,13 @@ WALLET_DIR = Path.home() / ".odrl"
 WALLET_FILE = WALLET_DIR / "did.json"
 VAULT_DIR = Path.cwd() / ".gemini" / "vault"
 SKILLS_DIR = Path.cwd() / ".gemini" / "skills"
+USERS_DIR = WALLET_DIR / "users"
 
 class ODRLWallet:
     def __init__(self):
         WALLET_DIR.mkdir(parents=True, exist_ok=True)
         VAULT_DIR.mkdir(parents=True, exist_ok=True)
+        USERS_DIR.mkdir(parents=True, exist_ok=True)
         self.did_data = self._load_wallet()
 
     def _load_wallet(self):
@@ -68,6 +70,23 @@ def create_did(name="Default User", role="Skill Owner"):
              print(f"  Response: {e.response.text}")
         return None
 
+def revoke_did(did):
+    url = f"{BASE_URL}/did/{did}"
+    try:
+        response = requests.delete(url)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"[ODRL Expert] Error revoking DID {did}: {e}")
+        return None
+
+def save_user_package(name, did_data):
+    user_file = USERS_DIR / f"{name.lower().replace(' ', '_')}_package.json"
+    with open(user_file, "w") as f:
+        json.dump(did_data, f, indent=2)
+    print(f"[ODRL Expert] Key package for {name} saved to {user_file}")
+    return user_file
+
 def create_policy(assigner, assignee, asset, permission="use"):
     url = f"{BASE_URL}/oac/policy"
     policy_json = {
@@ -93,6 +112,7 @@ def create_policy(assigner, assignee, asset, permission="use"):
 def vault_skill(skill_name):
     """
     Encrypts the skill into a ZIP archive using the Wallet's private key.
+    Ensures a fresh ZIP by removing any existing one first.
     """
     wallet = ODRLWallet()
     pk = wallet.get_private_key()
@@ -109,14 +129,18 @@ def vault_skill(skill_name):
 
     print(f"[ODRL Vault] Encrypting skill {skill_name} into {zip_path}...")
     
-    # -r recursive, -P password, -e encrypts, -j junk paths (keep relative structure from target)
+    # ENSURE FRESH ZIP (zip appends by default)
+    if zip_path.exists():
+        zip_path.unlink()
+    
     try:
+        # -r recursive, -P password
         subprocess.run([
             "zip", "-r", "-P", pk, str(zip_path), f".gemini/skills/{skill_name}"
         ], check=True, capture_output=True)
         print(f"[ODRL Vault] Skill {skill_name} successfully encrypted and moved to the Vault.")
         
-        # Optionally remove the plain source
+        # Remove plain source
         shutil.rmtree(src_dir)
         print(f"[ODRL Vault] Source directory removed. Skill now exists ONLY in the archive.")
     except Exception as e:
@@ -160,6 +184,15 @@ if __name__ == '__main__':
     subparsers.add_parser("init", help="Initialize local wallet")
     subparsers.add_parser("resolve-did").add_argument("did")
     
+    # User DID Creation
+    create_user_parser = subparsers.add_parser("create-user", help="Create DID for a new user")
+    create_user_parser.add_argument("name")
+    create_user_parser.add_argument("--role", default="Skill Consumer")
+
+    # Revoke
+    revoke_parser = subparsers.add_parser("revoke", help="Revoke a DID")
+    revoke_parser.add_argument("did")
+
     # Protect
     protect_parser = subparsers.add_parser("protect")
     protect_parser.add_argument("skill_name")
@@ -174,9 +207,25 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     if args.command == "init":
-        ODRLWallet()
+        wallet = ODRLWallet()
+        if not wallet.get_did():
+             print("[ODRL Wallet] Creating master identity...")
+             data = create_did("Master Admin", "DID Controller")
+             if data:
+                 wallet.save_did(data)
     elif args.command == "resolve-did":
         print(json.dumps(resolve_did(args.did), indent=2))
+    elif args.command == "create-user":
+        print(f"[ODRL Expert] Creating DID for user: {args.name}")
+        data = create_did(args.name, args.role)
+        if data:
+            save_user_package(args.name, data)
+            print(f"DID: {data.get('did')}")
+    elif args.command == "revoke":
+        res = revoke_did(args.did)
+        if res:
+            print(f"[ODRL Expert] DID {args.did} revoked.")
+            print(json.dumps(res, indent=2))
     elif args.command == "vault-skill":
         vault_skill(args.skill_name)
     elif args.command == "unvault-skill":

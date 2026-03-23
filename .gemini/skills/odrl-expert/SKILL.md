@@ -1,58 +1,76 @@
 ---
 name: odrl-expert
-description: Specialized in ODRL (Open Digital Rights Language) policies, decentralized identifiers (DIDs), and verifiable credentials (VCs) for data infrastructure. Integrated with the CA4EOSC ODRL-infra.
+description: Specialized in ODRL (Open Digital Rights Language) policies, decentralized identifiers (DIDs), and verifiable credentials (VCs) for data infrastructure.
 ---
 
-# ODRL Expert Skill
+# ODRL Expert Skill & Data Sovereignty
 
-The ODRL Expert skill enables precise management of digital rights policies using the [ODRL V2.2](https://www.w3.org/TR/odrl-model/) standard, integrated with [Decentralized Identifiers (DIDs)](https://www.w3.org/TR/did-core/) and [Verifiable Credentials (VCs)](https://www.w3.org/TR/vc-data-model/).
+The **ODRL Expert** skill provides the technical foundation for **Data Sovereignty** within the Gemini CLI ecosystem. By combining decentralized identity (DIDs) with machine-readable usage policies (ODRL), it ensures that data and functional capabilities (skills) remain under the explicit control of their owners.
 
-## Core Concepts
-- **ODRL Policy**: A JSON-LD document defining permissions (allowances), prohibitions (restrictions), and duties (obligations).
-- **DID (Decentralized Identifier)**: Used for identifying all participants (Assigner, Assignee) and assets.
-- **VC (Verifiable Credential)**: Used to prove attributes required by policies.
-- **OAC Profile**: A specialized ODRL profile used in the `odrl-infra`.
+## 🛡️ Support for Data Sovereignty
 
-## Persistence & Infrastructure Restriction
-This skill now enforces a security layer across your entire toolkit. Every skill (Fact Checker, Editor, etc.) is registered as an **ODRL Asset** and restricted by a core **Policy Agreement**. 
-- **Identity-First Access**: No skill can be executed without a valid DID from your wallet.
-- **Infrastructure Logging**: Every protection action is recorded on the ODRL infrastructure for auditability.
+Data sovereignty is the principle that data is subject to the laws and governance of the structures where it is collected or owned. This skill supports it through:
 
-## The ODRL Wallet
-Your identity keys are stored locally and securely in:
-- `~/.odrl/did.json`: Contains your master DID and **Private Key**.
+1.  **Decentralized Identity (DIDs)**: No central authority controls your identity. Your master key is stored locally in `~/.odrl/did.json`.
+2.  **Explicit Usage Policies**: Using ODRL V2.2, you can define exactly who (Assignee) can do what (Action) with which asset (Target).
+3.  **Encrypted Skill Vault**: Restricted skills are encrypted on disk using your private key, ensuring that even if the hardware is compromised, the high-value "restricted" logic remains inaccessible without authorization.
+4.  **Auditability**: Every protection action is recorded on the ODRL infrastructure, providing a verifiable "chain of custody" for data and tool access.
 
-## The Skill Vault (Encryption)
-To prevent unauthorized access to skill source code on disk, you can archive skills into the **ODRL Vault**.
-- **Encryption**: Skills are bundled into a ZIP archive protected by your **Master Private Key** as the password.
-- **Workflow**:
-    1.  `vault-skill`: Compresses the skill folder and deletes the plaintext source.
-    2.  `unvault-skill`: Uses your private key to extract the skill back into the toolkit for use/updating.
+## 🛠️ Available Methods (Client API)
 
-## Usage
-
-### 1. Initialize Your Wallet
-Creates your unique OOYDID identity if it doesn't exist.
+### 1. `init`
+Initializes your local ODRL wallet and generates your master **OOYDID** identity.
 ```bash
 python3 .gemini/skills/odrl-expert/scripts/odrl_client.py init
 ```
 
-### 2. Vault a Skill (Encrypt)
+### 2. `create-user`
+Generates a new DID and security certificate for a specific user or agent.
 ```bash
-python3 .gemini/skills/odrl-expert/scripts/odrl_client.py vault-skill "editor"
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py create-user "username"
 ```
 
-### 3. Unvault a Skill (Decrypt & Restore)
-```bash
-python3 .gemini/skills/odrl-expert/scripts/odrl_client.py unvault-skill "editor"
-```
-
-### 4. Resolve a DID
+### 3. `resolve-did`
+Resolves a DID string into its public document and attributes.
 ```bash
 python3 .gemini/skills/odrl-expert/scripts/odrl_client.py resolve-did did:oyd:zQmcVH...
 ```
 
-## Related Resources
-- **Repository**: [CA4EOSC/odrl-infra](https://github.com/CA4EOSC/odrl-infra)
-- **API Documentation**: [CODATA ODRL](https://odrl.dev.codata.org/docs)
-- **ODRL Information Model**: [W3C Spec](https://www.w3.org/TR/odrl-model/)
+### 4. `vault-skill` (Encryption)
+Encrypts a skill's source code into a ZIP archive using your private key and removes the plaintext directory.
+```bash
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py vault-skill "skill_name"
+```
+
+### 5. `unvault-skill` (Decryption)
+Restores an encrypted skill from the vault back to the toolkit using your private key.
+```bash
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py unvault-skill "skill_name"
+```
+
+### 6. `revoke`
+Officially revokes a DID on the infrastructure to prevent further authorized use.
+```bash
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py revoke did:oyd:zQmcVH...
+```
+
+### 7. `codata-brand` (Subskill)
+Generates high-fidelity PDF reports with the official CODATA logo (from `codata.org/wp-content...`) automatically applied to every page. This ensures content matches the professional data sovereignty branding.
+```bash
+python3 .gemini/skills/odrl-expert/scripts/codata_branding.py --file input.html --output data/branded_report.pdf
+```
+
+### 8. `protect` (Policy Agreement)
+Registers a skill or data asset as a protected entity and links it to a specific policy agreement.
+```bash
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py protect "asset_name"
+```
+
+## 📐 Policy Templates
+Standard templates are available in `.gemini/skills/odrl-expert/scripts/policy_templates.py` for:
+- **Research Use Only**: Restricts actions to non-commercial analysis.
+- **Attribution Required**: Mandates that the Assigner be credited in all outputs.
+- **Time-Limited Access**: Automatically expires permissions after a set date.
+
+---
+**Repository**: [CA4EOSC/odrl-infra](https://github.com/CA4EOSC/odrl-infra)
