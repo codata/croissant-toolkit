@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import google.generativeai as genai
 import uvicorn
+import subprocess
+from pathlib import Path
 
 
 LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
@@ -117,6 +119,22 @@ class ChatRequest(BaseModel):
     message: str
     croissant: dict
     history: list[dict] = []
+    api_key: str = None
+
+
+class SkillInfo(BaseModel):
+    """Information about a discovered skill."""
+    id: str
+    name: str
+    description: str
+    path: str
+
+
+class ExecuteSkillRequest(BaseModel):
+    """Request to execute a specific skill script."""
+    skill_id: str
+    script_name: str
+    args: list[str] = []
     api_key: str = None
 
 
@@ -272,6 +290,110 @@ Be concise and helpful."""
     except Exception as e:
         logger.error("[chat] Error | %s", e, exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/skills", response_model=list[SkillInfo])
+async def list_skills():
+    """Discover and list all available skills in the toolkit."""
+    skills = []
+    project_root = Path(__file__).parent.parent
+    skill_dirs = [
+        project_root / ".gemini" / "skills",
+        project_root / "skills"
+    ]
+
+    for base_dir in skill_dirs:
+        if not base_dir.exists():
+            continue
+        
+        for skill_path in base_dir.iterdir():
+            if not skill_path.is_dir():
+                continue
+            
+            skill_id = skill_path.name
+            skill_md = skill_path / "SKILL.md"
+            
+            name = skill_id
+            description = "No description provided."
+            
+            if skill_md.exists():
+                try:
+                    content = skill_md.read_text()
+                    if "---" in content:
+                        # Simple frontmatter parser
+                        fm = content.split("---")[1]
+                        for line in fm.split("\n"):
+                            if ":" in line:
+                                k, v = line.split(":", 1)
+                                if k.strip() == "name": name = v.strip()
+                                if k.strip() == "description": description = v.strip()
+                except Exception as e:
+                    logger.warning(f"Failed to parse SKILL.md for {skill_id}: {e}")
+
+            skills.append(SkillInfo(
+                id=skill_id,
+                name=name,
+                description=description,
+                path=str(skill_path.relative_to(project_root))
+            ))
+    
+    return skills
+
+
+@app.post("/execute-skill")
+async def execute_skill(request: ExecuteSkillRequest):
+    """Execute a specific script from a skill."""
+    project_root = Path(__file__).parent.parent
+    
+    # Security check: ensure the skill exists and the path is within project root
+    skill_base_paths = [
+        project_root / ".gemini" / "skills",
+        project_root / "skills"
+    ]
+    
+    skill_path = None
+    for base in skill_base_paths:
+        potential_path = base / request.skill_id
+        if potential_path.exists() and potential_path.is_dir():
+            skill_path = potential_path
+            break
+            
+    if not skill_path:
+        raise HTTPException(status_code=404, detail=f"Skill '{request.skill_id}' not found.")
+
+    script_path = skill_path / "scripts" / request.script_name
+    if not script_path.exists():
+        raise HTTPException(status_code=404, detail=f"Script '{request.script_name}' not found in skill '{request.skill_id}'.")
+
+    # Setup environment variables
+    env = os.environ.copy()
+    if request.api_key:
+        env["GEMINI_API_KEY"] = request.api_key
+
+    logger.info(f"[execute-skill] Running {request.skill_id}/{request.script_name} with args {request.args}")
+    
+    try:
+        # Construct the command
+        cmd = ["python3", str(script_path)] + request.args
+        
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd=str(project_root), # Run from project root
+            env=env,
+            check=False
+        )
+        
+        return {
+            "status": "success" if result.returncode == 0 else "error",
+            "exit_code": result.returncode,
+            "stdout": result.stdout,
+            "stderr": result.stderr
+        }
+    except Exception as e:
+        logger.error(f"[execute-skill] System error executing skill: {e}")
+        raise HTTPException(status_code=500, detail=f"System error: {str(e)}")
 
 
 if __name__ == "__main__":
