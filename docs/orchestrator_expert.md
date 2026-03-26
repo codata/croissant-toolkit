@@ -9,14 +9,21 @@ The Orchestrator Expert is the master agent that has comprehensive knowledge and
 The Orchestrator Expert knows how to use the following skills:
 - **Communication Officer (`communication_officer`)**: Sends results via email.
 - **Croissant Expert (`croissant_expert`)**: Generates MLCommons Croissant metadata.
+- **Data Expert (`data-expert`)**: Extracts claims and identifies technical metadata patterns.
+- **Fact Checker (`fact-checker`)**: Performs deep investigative analysis with visual evidence.
 - **Navigator (`navigator`)**: Performs web searches for information gathering.
 - **NLP Expert (`nlp_expert`)**: Handles text summarization, keyword extraction, and entities detection.
+- **ODRL Expert (`odrl-expert`)**: Manages decentralized IDs (DIDs) and usage policies.
 - **Photograph (`photograph`)**: Captures visual snapshots of web pages and records screen sessions.
+- **Presentation Expert (`presentation_expert`)**: Generates technical pitch decks from data.
+- **RO-Crate Expert (`ro-crate-expert`)**: Packages research data into RO-Crate objects.
 - **Telegram Expert (`telegram_expert`)**: Sends notifications and files to Telegram.
 - **Tester (`tester`, `skills-testor`)**: Validates that other skills function correctly.
 - **Transcriber (`transcriber`)**: Converts video audio to text.
 - **Translator (`translator`)**: Translates text across multiple languages.
 - **YouTuber (`youtuber`)**: Extracts informative metadata and transcripts from YouTube videos.
+- **CDIF Maker (`cdif-maker`)**: Produces structured variable inventories for cross-domain interoperability.
+- **Creator (`creator`)**: Renders cinematic MP4/AVI videos from toolkit assets.
 
 ## Usage
 

@@ -31,6 +31,10 @@
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
 * 🕵️ **Fact Checker**: High-fidelity AI analysis of sensitive claims, legal conflicts, and innovation impacts with visual passage highlighting and video evidence.
 * 📊 **Claims Detection**: Automated extraction of verifiable factual statements with MD5-based unique IDs and Schema.org semantic mapping.
+* 🏷️ **CDIF Maker**: Produce structured CDIF-dedicated semantic inventories from natural language for precise variable mapping.
+* 📦 **RO-Crate Expert**: Package Dataverse research objects into FAIR-compliant RO-Crate metadata with OOYDID provenance.
+* 📊 **Presentation Expert**: Automatically transform datasets and research insights into high-impact Markdown-based slide decks.
+* 🎨 **Creator (Cinematic Video)**: Generate premium, high-tech MP4/AVI videos and animated intros from toolkit data.
 
 ## 🧩 Skills & Tools
 
@@ -117,6 +121,26 @@ The `Claims Detection` skill transforms documents into structured factual datase
 1.  **Granular Extraction**: Isolates core factual claims and their original context sentences.
 2.  **Verifiable IDs**: Assigns unique MD5 hashes to every claim for reproducible identification.
 3.  **Standardized Export**: Generates `data/claims.json` with full DID attribution and truth probability scoring.
+
+### 🏷️ CDIF Maker Skill
+The `CDIF Maker` skill connects to semantic services for variable mapping. It:
+1. **Discovery**: Resolves natural language into structured technical metadata.
+2. **Inventory**: Produces standardized variable definitions and symbols.
+
+### 📦 RO-Crate Expert Skill
+The `RO-Crate Expert` skill bridges repositories with the RO-Crate standard. It:
+1. **Integration**: Seamlessly pulls data and metadata from Dataverse DOIs.
+2. **Packaging**: Creates FAIR-compliant ZIP archives with embedded DID documents.
+
+### 🎨 Creator Skill
+The `Creator` skill produces cinematic visual assets. It:
+1. **Media Rendering**: Generates MP4 videos from text, slides, and screenshots.
+2. **AI Aesthetics**: Applies premium futuristic styling to all toolkit demos.
+
+### 📊 Presentation Expert Skill
+The `Presentation Expert` handles storytelling. It:
+1. **Narrative Design**: Drafts technical pitch decks using Gemini 3.
+2. **Standard Serialization**: Outputs compliant Marp/Markdown slides.
 
 ## 🛠️ Tech Stack
 
@@ -271,6 +295,27 @@ python3 .gemini/skills/photograph/scripts/record_screen.py --command "python3 .g
 python3 .gemini/skills/youtuber/scripts/video_snapshot.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
 
+**Using the RO-Crate Expert Skill:**
+```bash
+# Package a Dataverse dataset with DID provenance
+python3 .gemini/skills/ro-crate-expert/scripts/create_crate.py "doi:10.70122/FK2/TTSEXH" --zip
+```
+
+**Using the Presentation Expert & Creator Skills:**
+```bash
+# 1. Generate slides from a dataset
+python3 .gemini/skills/presentation_expert/scripts/generate_slides.py "My Dataset"
+
+# 2. Convert slides to a cinematic video
+python3 .gemini/skills/creator/scripts/markdown_to_video.py .gemini/skills/presentation_expert/output/slides/my_dataset.md
+```
+
+**Using the CDIF Maker Skill:**
+```bash
+# Discover variables and mapped definitions
+python3 .gemini/skills/cdif-maker/scripts/cdif_maker.py "air quality index"
+```
+
 **Metadata Generation:**
 ```bash
 # Example: Generate a Croissant metadata file from a raw dataset directory
@@ -380,6 +425,10 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 - [Photograph](./docs/photograph.md)
 - [Fact Checker](./docs/fact_checker.md)
 - [Claims Detection (Data Expert)](./docs/data_expert.md)
+- [CDIF Maker](./docs/cdif_maker.md)
+- [RO-Crate Expert](./docs/ro_crate_expert.md)
+- [Creator](./docs/creator.md)
+- [Presentation Expert](./docs/presentation_expert.md)
 
 ## 👥 Team
 
