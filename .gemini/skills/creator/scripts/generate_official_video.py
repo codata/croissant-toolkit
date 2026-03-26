@@ -44,7 +44,7 @@ def render_outro_slide(output_path, size=(1920, 1080)):
     
     # Text Centered
     title = "CROISSANT TOOLKIT"
-    link = "https://github.com/4tikhonov/croissant-toolkit"
+    link = "https://github.com/codata/croissant-toolkit"
     cast_title = "CAST:"
     cast_names = [
         "Slava Tykhonov",

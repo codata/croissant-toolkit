@@ -139,7 +139,7 @@ The `Claims Detection` skill transforms documents into structured factual datase
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/4tikhonov/croissant-toolkit.git
+   git clone https://github.com/codata/croissant-toolkit.git
    cd croissant-toolkit
    ```
 
