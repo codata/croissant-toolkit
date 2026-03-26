@@ -428,6 +428,7 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 - [RO-Crate Expert](./docs/ro_crate_expert.md)
 - [Creator](./docs/creator.md)
 - [Presentation Expert](./docs/presentation_expert.md)
+- [Submodule Usage (Reusing Skills)](./docs/submodule_usage.md)
 
 ## 👥 Team
 
