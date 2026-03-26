@@ -24,10 +24,12 @@
 * 💎 **Obsidian Expert**: Automatically transform Croissant metadata into rich Markdown notes.
 * 🕸️ **Neo4j Expert**: Ingest Croissant datasets into a Neo4j Graph Database for relational discovery and semantic search.
 * 🚶 **Walker Expert**: Extract and explore internal links from a page when deep research is required.
-* 📸 **Screenshot Taker**: Automatically capture high-quality snapshots of web pages for visual archiving and analysis.
+* 📸 **Photograph**: Automatically capture high-quality snapshots of web pages and record screen activity during process execution.
 * 🔍 **Semantic Dataset Search**: Search through local and remote datasets using natural language queries.
 * ✅ **Format Validation**: Ensure your metadata files are 100% compliant with the MLCommons Croissant specification.
 * 💬 **Dataset Q&A**: Ask questions directly about your datasets, getting instant insights from descriptions, structures, and schemas.
+* 🕵️ **Fact Checker**: High-fidelity AI analysis of sensitive claims, legal conflicts, and innovation impacts with visual passage highlighting and video evidence.
+* 📊 **Claims Detection**: Automated extraction of verifiable factual statements with MD5-based unique IDs and Schema.org semantic mapping.
 
 ## 🧩 Skills & Tools
 
@@ -53,7 +55,8 @@ The `Transcriber` skill converts video content into a machine-readable format. I
 The `Wizard` is the master orchestrator of the toolkit. It provides a single entry point for complex data tasks:
 1.  **Automation**: Chaining transcription, translation, and NLP enrichment.
 2.  **Multilingual Support**: Captures entities in both English and their original language (e.g., Ukrainian, Russian, French) using JSON-LD tags.
-3.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file, with optional email delivery to stakeholders.
+3.  **Synthesis**: Combines factual measurements and AI-driven fact-checking into a single investigative report.
+4.  **End-to-End**: Goes from a raw link to a finalized Croissant metadata file with automated verification and secure vaulting.
 
 ### 🌍 Translator Skill
 The `Translator` skill ensures the toolkit is truly global. It:
@@ -95,6 +98,25 @@ The `Walker` skill performs deep web exploration. It:
 1.  **Deep Crawl**: Extracts all internal links from a specified URL.
 2.  **Autonomous Navigation**: Can be triggered to visit all discovered pages if initial information is insufficient.
 
+### 🔒 ODRL Expert Skill
+The `ODRL Expert` provides a decentralized security layer. It:
+1.  **Identity**: Manages your master identity via DIDs (Decentralized Identifiers).
+2.  **Rights Management**: Enforces ODRL policies to restrict or permit skill usage via the [CODATA OAC Profile](https://odrl.dev.codata.org/docs).
+3.  **Skill Vault**: Encrypts skill source code using your private key to ensure physical security.
+4.  **Branding**: Automatically applies CODATA/Croissant branding and provenance metadata to generated artifacts.
+
+### 🕵️ Fact Checker Skill
+The `Fact Checker` performing deep investigative analysis on a document or URL. It:
+1.  **Sensitive Discovery**: Detects high-stakes claims related to terminations, legal conflicts, and corporate sensitive data.
+2.  **Innovation Summary**: Synthesizes the cognitive impact and innovative potential of the analyzed content.
+3.  **Visual Evidence**: Generates highlight-annotated video recordings of its reasoning process.
+
+### 📊 Claims Detection (Data Expert) Skill
+The `Claims Detection` skill transforms documents into structured factual datasets. It:
+1.  **Granular Extraction**: Isolates core factual claims and their original context sentences.
+2.  **Verifiable IDs**: Assigns unique MD5 hashes to every claim for reproducible identification.
+3.  **Standardized Export**: Generates `data/claims.json` with full DID attribution and truth probability scoring.
+
 ## 🛠️ Tech Stack
 
 * **[Gemini 3 API](https://ai.google.dev/)**: For LLM-driven metadata generation, reasoning, and semantic search.
@@ -117,7 +139,7 @@ The `Walker` skill performs deep web exploration. It:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/4tikhonov/croissant-toolkit.git
+   git clone https://github.com/codata/croissant-toolkit.git
    cd croissant-toolkit
    ```
 
@@ -233,13 +255,16 @@ python3 skills/neo4j_expert/scripts/query.py "Which datasets were created in Fra
 python3 skills/walker/scripts/walk.py "https://example.com" --limit 5 --navigate
 ```
 
-**Using the Screenshot Taker Skill:**
+**Using the Photograph Skill:**
 ```bash
 # Take a standard screenshot
-python3 .gemini/skills/screenshot_taker/scripts/take_screenshot.py "https://www.google.com"
+python3 .gemini/skills/photograph/scripts/take_screenshot.py "https://www.google.com"
 
 # Take a full-page screenshot
-python3 .gemini/skills/screenshot_taker/scripts/take_screenshot.py "https://mlcommons.org/croissant" --full_page
+python3 .gemini/skills/photograph/scripts/take_screenshot.py "https://mlcommons.org/croissant" --full_page
+
+# Record the screen while running a process (e.g. searching YouTube)
+python3 .gemini/skills/photograph/scripts/record_screen.py --command "python3 .gemini/skills/youtuber/scripts/youtube_search.py MLCommons"
 
 # Take a YouTube snapshot (automatically waits for ads)
 python3 .gemini/skills/youtuber/scripts/video_snapshot.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
@@ -249,6 +274,24 @@ python3 .gemini/skills/youtuber/scripts/video_snapshot.py "https://www.youtube.c
 ```bash
 # Example: Generate a Croissant metadata file from a raw dataset directory
 python main.py generate ./my-local-dataset
+```
+
+### 🔒 ODRL & Skill Vault
+The toolkit uses the [CODATA ODRL Infrastructure](https://odrl.dev.codata.org/) for decentralized access control.
+
+**Initialize your security wallet:**
+```bash
+python3 .gemini/skills/odrl_expert/scripts/odrl_client.py init
+```
+
+**Encrypt/Vault a skill:**
+```bash
+python3 .gemini/skills/odrl_expert/scripts/odrl_client.py vault-skill "fact-checker"
+```
+
+**Decrypt/Restore a skill:**
+```bash
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py unvault-skill "fact-checker"
 ```
 
 ## 🧪 Testing
@@ -333,6 +376,9 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 - [NLP Expert](./docs/nlp_expert.md)
 - [Navigator](./docs/navigator.md)
 - [YouTuber](./docs/youtuber.md)
+- [Photograph](./docs/photograph.md)
+- [Fact Checker](./docs/fact_checker.md)
+- [Claims Detection (Data Expert)](./docs/data_expert.md)
 
 ## 👥 Team
 
