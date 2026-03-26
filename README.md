@@ -429,6 +429,7 @@ For detailed documentation on each skill, please refer to the [`docs/`](./docs/)
 - [Creator](./docs/creator.md)
 - [Presentation Expert](./docs/presentation_expert.md)
 - [Submodule Usage (Reusing Skills)](./docs/submodule_usage.md)
+- [Gemini CLI Skill Loading](./docs/gemini_cli_skills.md)
 
 ## 👥 Team
 
