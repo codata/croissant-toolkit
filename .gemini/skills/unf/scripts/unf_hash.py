@@ -25,17 +25,26 @@ def compute_unf_string(input_string):
     return unf_column(series)
 
 def compute_unf_file(file_path, json_report=False):
-    """Compute UNF for a data file (CSV, Parquet, etc.)."""
+    """Compute UNF for a data file (CSV, Parquet, etc.). Falls back to raw string for text files."""
     path = Path(file_path)
     if not path.exists():
         print(f"ERROR: File not found: {file_path}")
         return None
     
-    report = unf_file(path)
-    if json_report:
-        return report.to_json(validate=False)
-    else:
-        return report.result.unf
+    try:
+        report = unf_file(path)
+        if json_report:
+            return report.to_json(validate=False)
+        else:
+            return report.result.unf
+    except (ValueError, Exception) as e:
+        # Fallback: treat as raw text (single string) if it's not a supported data format
+        try:
+            content = path.read_text(encoding="utf-8")
+            return compute_unf_string(content)
+        except Exception as read_err:
+            print(f"ERROR: Failed to hash file {file_path}: {e}. Fallback failed: {read_err}")
+            return None
 
 def main():
     parser = argparse.ArgumentParser(description="UNF Expert: Compute Universal Numeric Fingerprints (UNF v6).")
