@@ -40,6 +40,20 @@ Reads a ZIP package, extracts the asset's DID, and resolves its full provenance 
 python3 .gemini/skills/ro-crate-expert/scripts/inspect_crate.py "data/rocrate_${DID}.zip"
 ```
 
+### Encrypt Crate (Privacy at Rest)
+Encrypts an RO-Crate ZIP using the master private key of your ODRL wallet. This follows the TRIZ principle of **Extraction** (locking data with a separate key).
+
+```bash
+python3 .gemini/skills/ro-crate-expert/scripts/encrypt_crate.py "data/rocrate_${DID}.zip"
+```
+
+### Decrypt Crate
+Unlocks an encrypted RO-Crate using the owner's private key.
+
+```bash
+python3 .gemini/skills/ro-crate-expert/scripts/decrypt_crate.py "data/encrypted_rocrate_${DID}.zip"
+```
+
 ### Resulting Artifacts
 - **`ro-crate-metadata.json`**: The core RO-Crate metadata generated via `rocrate-py`.
 - **`did_signature.json`**: The "digitally signed file" (DID Package) comprising the asset's decentralized identity credentials.

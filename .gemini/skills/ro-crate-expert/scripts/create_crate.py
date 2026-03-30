@@ -36,18 +36,49 @@ except ImportError:
 def get_dataverse_metadata(doi, exporter="schema.org"):
     """Fetches metadata from Dataverse."""
     if "persistentId=" in doi:
+        # Extract base URL if possible
+        if "dataverse.harvard.edu" in doi:
+            base_url = "https://dataverse.harvard.edu"
+        else:
+            base_url = "https://demo.dataverse.org"
         doi = doi.split("persistentId=")[1]
+    else:
+        # Default to demo if not specified, but check for harvard DOI prefix
+        base_url = "https://dataverse.harvard.edu" if "10.7910" in doi else "https://demo.dataverse.org"
     
-    url = "https://demo.dataverse.org/api/datasets/export"
+    url = f"{base_url}/api/datasets/export"
     params = {"exporter": exporter, "persistentId": doi}
     
-    print(f"[RO-Crate Expert] Retrieving {exporter} metadata for {doi}...")
+    print(f"[RO-Crate Expert] Retrieving {exporter} metadata from {base_url} for {doi}...")
     try:
         r = requests.get(url, params=params)
         r.raise_for_status()
         return r.json()
     except Exception as e:
         print(f"[RO-Crate Expert] Dataverse API Error: {e}")
+        return None
+
+def fetch_html_content(url):
+    """Fetches the HTML content of a page."""
+    try:
+        # Determine base URL for landing page
+        if "10.7910" in url or "dataverse.harvard.edu" in url:
+            base_url = "https://dataverse.harvard.edu"
+        else:
+            base_url = "https://demo.dataverse.org"
+
+        if url.startswith("https://doi.org/"):
+             doi = url.split("doi.org/")[1]
+             url = f"{base_url}/dataset.xhtml?persistentId=doi:{doi}"
+        elif url.startswith("doi:"):
+             url = f"{base_url}/dataset.xhtml?persistentId={url}"
+        
+        print(f"[RO-Crate Expert] Fetching HTML content from {url}...")
+        r = requests.get(url)
+        r.raise_for_status()
+        return r.text
+    except Exception as e:
+        print(f"[RO-Crate Expert] HTML Fetch Error: {e}")
         return None
 
 def download_file(url, dest_path):
@@ -101,12 +132,30 @@ def build_crate(metadata, output_path, ore_metadata=None, make_zip=False):
     for c in creators:
         c_name = c.get("name")
         if c_name:
-            crate.add(Person(crate, c_name, properties={"affiliation": c.get("affiliation", "")}))
+            # Handle affiliation which might be a string or an object
+            affiliation = c.get("affiliation", "")
+            if isinstance(affiliation, dict):
+                affiliation = affiliation.get("name", "")
+            crate.add(Person(crate, c_name, properties={"affiliation": affiliation}))
 
     # 3. Handle OAI_ORE and File Downloads
     out_dir = Path(output_path)
     out_dir.mkdir(parents=True, exist_ok=True)
     
+    # Fetch and include HTML Landing Page
+    landing_url = metadata.get("@id") or metadata.get("identifier")
+    html_content = fetch_html_content(landing_url)
+    if html_content:
+        html_file = out_dir / "landing_page.html"
+        with open(html_file, "w") as f:
+            f.write(html_content)
+        crate.add_file(html_file, dest_path="landing_page.html", properties={
+            "name": "Dataverse Landing Page",
+            "description": "HTML content of the original Dataverse landing page",
+            "encodingFormat": "text/html",
+            "url": landing_url
+        })
+
     if ore_metadata:
         aggregates = ore_metadata.get("ore:describes", {}).get("ore:aggregates", [])
         if aggregates:
