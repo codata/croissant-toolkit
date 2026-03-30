@@ -35,6 +35,10 @@
 * 📦 **RO-Crate Expert**: Package Dataverse research objects into FAIR-compliant RO-Crate metadata with OOYDID provenance.
 * 📊 **Presentation Expert**: Automatically transform datasets and research insights into high-impact Markdown-based slide decks.
 * 🎨 **Creator (Cinematic Video)**: Generate premium, high-tech MP4/AVI videos and animated intros from toolkit data.
+* 🕸️ **ROHub**: Deposit research objects and add rich semantic annotations (triples) to the RO-Hub portal following FAIR2Adapt profiles.
+* 🏗️ **The Visual Systems Architect**: Translate complex technical requirements and data flows into clear, intuitive Mermaid.js diagrams.
+* 🧠 **TRIZ Expert**: Inventive problem-solving framework to resolve technical contradictions and optimize solutions (ODRL Protected).
+* ♾️ **UNF Skill**: Universal Numeric Fingerprint (UNF) generator for creating system-independent hashes for data strings and tables.
 
 ## 🧩 Skills & Tools
 
@@ -141,6 +145,21 @@ The `Creator` skill produces cinematic visual assets. It:
 The `Presentation Expert` handles storytelling. It:
 1. **Narrative Design**: Drafts technical pitch decks using Gemini 3.
 2. **Standard Serialization**: Outputs compliant Marp/Markdown slides.
+
+### 🧠 TRIZ Expert Skill (ODRL Protected)
+The `TRIZ` skill handles innovation and optimization. It:
+1. **Contradiction Analysis**: Identifies technological or physical contradictions in a system.
+2. **Inventive Proposals**: Suggests improvements using the 40 Inventive Principles and Ideal Final Result (IFR) concepts.
+
+### ♾️ UNF Skill
+The `UNF` skill handles data integrity. It:
+1. **Universal Hashing**: Computes format-agnostic fingerprints (UNF v6) for datasets and strings.
+2. **Canonical Parity**: Aligns with the Dataverse specification for reproducible research identifiers.
+
+### 🏛️ The Visual Systems Architect
+The `Architect` skill handles complex infrastructure design. It:
+1. **Analyze & Design**: Translates data flows and app ideas into scalable architectural patterns.
+2. **Visualize**: Generates render-ready Mermaid.js code for system interactions and VPC boundaries.
 
 ## 🛠️ Tech Stack
 
@@ -314,6 +333,12 @@ python3 .gemini/skills/creator/scripts/markdown_to_video.py .gemini/skills/prese
 ```bash
 # Discover variables and mapped definitions
 python3 .gemini/skills/cdif-maker/scripts/cdif_maker.py "air quality index"
+```
+
+**Using the Architect Skill:**
+```bash
+# Generate an architecture diagram from a description
+python3 .gemini/skills/architect/scripts/architect.py "A scalable e-commerce checkout system"
 ```
 
 **Metadata Generation:**
