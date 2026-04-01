@@ -21,13 +21,19 @@ Data sovereignty is the principle that data is subject to the laws and governanc
 ### 1. `init`
 Initializes your local ODRL wallet and generates your master **OOYDID** identity.
 ```bash
-python3 .gemini/skills/odrl-expert/scripts/odrl_client.py init
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py init --email "your@email.com"
 ```
 
-### 2. `create-user`
+### 2. `introduce`
+Introduce yourself and display your Decentralized Identity (DID).
+```bash
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py introduce
+```
+
+### 3. `create-user`
 Generates a new DID and security certificate for a specific user or agent.
 ```bash
-python3 .gemini/skills/odrl-expert/scripts/odrl_client.py create-user "username"
+python3 .gemini/skills/odrl-expert/scripts/odrl_client.py create-user "username" --email "user@email.com"
 ```
 
 ### 3. `resolve-did`
