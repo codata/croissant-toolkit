@@ -24,6 +24,9 @@ The Orchestrator Expert knows how to use the following skills:
 - **YouTuber (`youtuber`)**: Extracts informative metadata and transcripts from YouTube videos.
 - **CDIF Maker (`cdif-maker`)**: Produces structured variable inventories for cross-domain interoperability.
 - **Creator (`creator`)**: Renders cinematic MP4/AVI videos from toolkit assets.
+- **Architect (`architect`)**: Translates complex technical requirements into visually intuitive architectural diagrams (Mermaid.js).
+- **TRIZ Expert (`triz`)**: Inventive problem-solving framework based on 40 Principles and contradiction resolution (ODRL Protected - Requires Vault access).
+- **UNF Skill (`unf`)**: Computes format-agnostic Universal Numeric Fingerprints (UNF v6) for data strings or files for precise versioning and integrity.
 
 ## Usage
 
