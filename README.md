@@ -170,6 +170,7 @@ The `Architect` skill handles complex infrastructure design. It:
 * **YouTube Data Parser**: Custom scraper for YouTube's initial metadata.
 * **YouTube Transcript API**: For secure retrieval of video caption text.
 * **AI Translation & NLP**: High-precision multi-lingual support and entity extraction via Gemini 3.
+* **[GitHub Deployment Guide](./docs/github_deployment_guide.md)**: How to package and push the toolkit with ODRL security.
 
 ## 🚀 Getting Started
 
