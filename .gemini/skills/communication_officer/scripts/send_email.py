@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import smtplib
 from email.message import EmailMessage
 
@@ -31,6 +32,49 @@ def format_professional_search_report(json_path):
     except Exception as e:
         return f"Warning: Failed to format search report: {e}\n\nRaw Data Follows:\n{json_path}"
 
+def enrich_body_with_search_results(body):
+    """Enriches the email body with rich details from google_search_results.json if links are present."""
+    import json
+    json_path = "google_search_results.json"
+    if not os.path.exists(json_path):
+        return body
+
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            results = json.load(f)
+        
+        # Build lookup table by URL
+        results_map = {res.get('url'): res for res in results}
+        
+        lines = body.split('\n')
+        enriched_lines = []
+        
+        for line in lines:
+            # Check if line looks like a link or list item with link
+            # match: 1. http://... or just http://...
+            link_match = re.search(r'https?://[^\s,]+', line)
+            if link_match:
+                url = link_match.group(0).strip('.')
+                if url in results_map:
+                    res = results_map[url]
+                    title = res.get('title', 'Untitled Result').upper()
+                    snippet = res.get('snippet', '')
+                    
+                    # Create a rich block for this link
+                    enriched_line = f"🌐 {title}\n"
+                    enriched_line += f"   🔗 URL: {url}\n"
+                    if snippet:
+                        enriched_line += f"   📝 Summary: {snippet}\n"
+                    enriched_lines.append(enriched_line)
+                    continue
+            
+            enriched_lines.append(line)
+            
+        return '\n'.join(enriched_lines)
+    except Exception as e:
+        print(f"Warning: Enrichment failed: {e}")
+        return body
+
 def send_email(recipient, subject, body, attachment_path=None):
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
@@ -44,10 +88,13 @@ def send_email(recipient, subject, body, attachment_path=None):
         print("export SMTP_PASS='your-google-app-password'")
         return False
 
-    # Check if body is requesting a professional search report
+    # Check if body is requesting a professional search report or contains links to enrich
     if body == "google_search_results.json" and os.path.exists(body):
          print("[Communication Officer] Generating professional search report from JSON...")
          body = format_professional_search_report(body)
+    else:
+         print("[Communication Officer] Enriching email body with metadata...")
+         body = enrich_body_with_search_results(body)
 
     msg = EmailMessage()
     msg.set_content(body)
