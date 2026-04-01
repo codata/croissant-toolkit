@@ -1,6 +1,6 @@
 ---
 name: unf
-description: Universal Numeric Fingerprint (UNF) generator. Computes a format-agnostic, system-independent hash for data vectors, dataframes, and files based on the Dataverse UNF v6 specification.
+description: Universal Numeric Fingerprint (UNF) generator. For strings, it splits into words and sorts them alphabetically to provide order-invariant fingerprints. Supports dataframes and files too.
 ---
 
 # ♾️ UNF Skill
@@ -9,7 +9,7 @@ The **UNF (Universal Numeric Fingerprint)** skill provides a robust mechanism fo
 
 ## 🌟 Key Features
 
-1.  **Atomic Hashing**: Compute fingerprints for single values or character strings.
+1.  **Semantic Hashing**: For strings, it splits content into words and sorts them alphabetically. This ensures that "temperature is celcius" and "celcius is temperature" produce the same UNF.
 2.  **Vector Hashing**: Fingerprint entire data columns (Polars Series).
 3.  **Format Invariance**: Identical data in different file formats (e.g., CSV vs. Parquet) yields the same UNF.
 4.  **Column-Order Invariance**: Dataframes with reordered columns produce the same hash.
