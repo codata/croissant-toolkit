@@ -11,22 +11,32 @@ SKILLS_DIR = PROJECT_ROOT / ".gemini" / "skills"
 AUTH_FILE = Path.home() / ".odrl" / "authorize.did"
 
 def get_auth_private_key():
-    """Retrieve the private key from the authorize.did file."""
+    """Retrieve the private key from the authorize.did file (supports JSON or raw string)."""
     if not AUTH_FILE.exists():
         print(f"[ODRL Login] Error: Authorization file not found at {AUTH_FILE}")
         return None
     
-    try:
-        with open(AUTH_FILE, "r") as f:
-            data = json.load(f)
-            # Assuming standard wallet structure: keys.private_key
-            pk = data.get("keys", {}).get("private_key")
-            if not pk:
-                print("[ODRL Login] Error: Private key entry missing in authorize.did")
-            return pk
-    except Exception as e:
-        print(f"[ODRL Login] Error reading {AUTH_FILE}: {e}")
+    content = AUTH_FILE.read_text().strip()
+    if not content:
+        print(f"[ODRL Login] Error: {AUTH_FILE} is empty.")
         return None
+
+    # Scenario 1: File is a JSON DID document
+    try:
+        data = json.loads(content)
+        pk = data.get("keys", {}).get("private_key")
+        if pk:
+            return pk
+        # Fallback for other potential structures
+        pk = data.get("private_key")
+        if pk:
+            return pk
+    except json.JSONDecodeError:
+        # Scenario 2: File is a raw string (the key itself)
+        return content
+    
+    print("[ODRL Login] Error: Could not extract private key from authorize.did")
+    return None
 
 def unvault_all_skills(private_key):
     """Attempt to unvault all restricted skills using the provided key."""
